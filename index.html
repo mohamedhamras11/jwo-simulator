@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JWO Store Simulator</title>
+<style>
+  :root {
+    --bg:#f4f5f7; --panel:#fff; --ink:#1b1f24; --muted:#6a737d; --line:#dfe3e8;
+    --accent:#0b7a4b; --accent-ink:#fff; --warn:#b45309; --bad:#c62828; --good:#0b7a4b; --code:#0f1720;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#12151a; --panel:#1b2027; --ink:#e8ebef; --muted:#97a1ad; --line:#2d3540; --accent:#2fb479; --accent-ink:#06180f; --code:#0a0d11; --bad:#ef6a6a; --warn:#e0a24a; --good:#2fb479; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  header { display:flex; align-items:center; gap:12px; padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--line); }
+  header h1 { font-size:15px; margin:0; letter-spacing:.04em; }
+  header .tag { color:var(--muted); font-size:12px; }
+  main { display:grid; grid-template-columns:minmax(300px,380px) 1fr minmax(320px,440px); gap:16px; padding:16px; align-items:start; }
+  @media (max-width:1100px){ main{ grid-template-columns:1fr; } }
+  section { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  section h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 10px; display:flex; justify-content:space-between; align-items:center; }
+  label { display:block; font-size:12px; color:var(--muted); margin:8px 0 3px; }
+  input, select, textarea { width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); font:inherit; }
+  textarea { font-family:ui-monospace,Menlo,monospace; font-size:12px; }
+  button { padding:7px 12px; border:1px solid var(--line); border-radius:6px; background:var(--panel); color:var(--ink); font:inherit; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600; }
+  button.danger { color:var(--bad); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .row { display:flex; gap:8px; align-items:end; }
+  .row > * { flex:1; }
+  .row > button { flex:0 0 auto; }
+  .stack > * + * { margin-top:10px; }
+
+  /* gate */
+  .gate { display:flex; align-items:center; justify-content:center; gap:0; margin:6px 0 12px; }
+  .pillar { width:46px; height:88px; background:#f1f1ee; border:1px solid #c9c9c4; border-radius:6px; position:relative; }
+  .pillar::after { content:"JUST WALK OUT"; position:absolute; inset:34px 2px auto; font-size:7px; font-weight:800; text-align:center; color:#222; }
+  .pillar .lamp { position:absolute; top:6px; left:50%; width:14px; height:14px; margin-left:-7px; border-radius:50%; background:#8a8f98; transition:background .2s, box-shadow .2s; }
+  .lane { width:130px; height:88px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--muted); border-bottom:3px solid var(--line); transition:all .2s; }
+  .gate.open .lamp { background:#20c26f; box-shadow:0 0 12px #20c26f; }
+  .gate.open .lane { color:var(--good); border-color:var(--good); }
+  .gate.denied .lamp { background:#e04444; box-shadow:0 0 12px #e04444; }
+  .gate.denied .lane { color:var(--bad); border-color:var(--bad); }
+
+  .steps { display:flex; gap:6px; margin-bottom:10px; font-size:12px; }
+  .step { flex:1; text-align:center; padding:5px 0; border-radius:6px; background:var(--bg); color:var(--muted); border:1px solid var(--line); }
+  .step.on { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .step.done { color:var(--good); border-color:var(--good); }
+
+  .status { font-size:13px; padding:8px 10px; border-radius:6px; background:var(--bg); border:1px solid var(--line); }
+  .status.ok { color:var(--good); } .status.err { color:var(--bad); }
+  .kv { font-size:12px; color:var(--muted); word-break:break-all; }
+  .kv b { color:var(--ink); font-weight:600; }
+
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; font-size:11px; color:var(--muted); font-weight:600; padding:4px 6px; border-bottom:1px solid var(--line); }
+  td { padding:6px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  td input { padding:4px 6px; width:70px; }
+  .empty { color:var(--muted); font-size:13px; padding:12px 0; text-align:center; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .chips button { font-size:12px; padding:4px 9px; }
+
+  .log { max-height:640px; overflow:auto; }
+  .entry { border:1px solid var(--line); border-radius:8px; margin-bottom:8px; overflow:hidden; }
+  .entry summary { cursor:pointer; padding:7px 10px; display:flex; gap:8px; align-items:center; font-size:12px; }
+  .badge { padding:1px 7px; border-radius:10px; font-weight:700; font-size:11px; color:#fff; background:var(--muted); }
+  .badge.s2 { background:var(--good); } .badge.s4, .badge.s5, .badge.s0 { background:var(--bad); }
+  .entry pre { margin:0; padding:10px; background:var(--code); color:#d6e2ee; font-size:11.5px; overflow:auto; max-height:260px; }
+  .entry .tools { padding:6px 10px; display:flex; gap:6px; }
+  .entry .tools button { font-size:11px; padding:2px 8px; }
+  .t { color:var(--muted); margin-left:auto; }
+  .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>JWO &middot; STORE SIMULATOR</h1>
+  <span class="tag">Just Walk Out &rarr; RetailCloud integration service</span>
+</header>
+
+<main>
+  <!-- LEFT: configuration -->
+  <section class="stack">
+    <h2>Connection <button id="btnReset" title="Clear saved settings">Reset</button></h2>
+    <div>
+      <label for="platformUrl">Platform URL</label>
+      <input id="platformUrl" placeholder="https://your-platform-host" autocomplete="off">
+      <div class="hint">Calls <code>/external/orders/customers/identify</code> and <code>/external/orders/sync</code> on the integration service.</div>
+    </div>
+    <div>
+      <label for="domain">Merchant domain</label>
+      <input id="domain" placeholder="e.g. mystore" autocomplete="off">
+    </div>
+    <div>
+      <label for="token">Bearer token <span style="float:right"><input type="checkbox" id="rememberToken" style="width:auto"> remember</span></label>
+      <input id="token" type="password" placeholder="OAuth access token" autocomplete="off">
+    </div>
+    <div class="row">
+      <div>
+        <label for="storeId">JWO store ID</label>
+        <input id="storeId" placeholder="must match auth additionalAuthInfo">
+      </div>
+      <div>
+        <label for="deviceId">Shopper device ID</label>
+        <input id="deviceId">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="channel">Scan channel</label>
+        <select id="channel">
+          <option value="OPTICAL">OPTICAL (QR, base64)</option>
+          <option value="RADIO">RADIO (raw)</option>
+          <option value="CONTACT">CONTACT (base64)</option>
+        </select>
+      </div>
+      <div>
+        <label for="currency">Currency</label>
+        <input id="currency" value="USD">
+      </div>
+    </div>
+    <div>
+      <label for="paymentSource">Payment source ID <span style="font-weight:400">(optional)</span></label>
+      <input id="paymentSource" placeholder="JWO payment source id">
+    </div>
+    <div class="kv">Settings are saved in this browser only. The token is kept for this tab unless &ldquo;remember&rdquo; is ticked.</div>
+  </section>
+
+  <!-- MIDDLE: store flow -->
+  <section>
+    <h2>Store <span class="kv" id="tripLabel"></span></h2>
+    <div class="steps">
+      <div class="step on" id="st1">1 &middot; Entry scan</div>
+      <div class="step" id="st2">2 &middot; Shop</div>
+      <div class="step" id="st3">3 &middot; Exit &amp; purchase</div>
+    </div>
+
+    <div class="gate" id="gate">
+      <div class="pillar"><div class="lamp"></div></div>
+      <div class="lane" id="laneText">ENTER WITH APP</div>
+      <div class="pillar"><div class="lamp"></div></div>
+    </div>
+
+    <div class="stack">
+      <div id="status" class="status">IDLE &middot; scan a shopper code to enter</div>
+
+      <div class="row">
+        <div>
+          <label for="scanValue">Shopper code (QR value)</label>
+          <input id="scanValue" placeholder="loyalty / member number" autocomplete="off">
+        </div>
+        <button class="primary" id="btnScan">Scan at entry</button>
+      </div>
+      <div class="kv" id="shopperInfo"></div>
+
+      <hr style="border:0;border-top:1px solid var(--line);width:100%">
+
+      <div class="row">
+        <div>
+          <label for="itemId">Item ID / UPC</label>
+          <input id="itemId" placeholder="sent exactly as typed, no lookup" autocomplete="off">
+        </div>
+        <div style="max-width:90px">
+          <label for="itemQty">Qty</label>
+          <input id="itemQty" type="number" min="0" step="1" value="1">
+        </div>
+        <div style="max-width:120px">
+          <label for="itemType">Type</label>
+          <select id="itemType"><option>SKU</option><option>SCANCODE</option></select>
+        </div>
+        <button id="btnAdd">+ Take</button>
+      </div>
+      <div class="chips" id="recent"></div>
+
+      <div>
+        <table id="cartTable">
+          <thead><tr><th>Item</th><th>Type</th><th>Qty</th><th></th></tr></thead>
+          <tbody id="cartBody"></tbody>
+        </table>
+        <div class="empty" id="cartEmpty">Cart is empty</div>
+      </div>
+
+      <div class="row">
+        <button id="btnNew">New trip</button>
+        <button class="primary" id="btnExit">Walk out &rarr; send purchase</button>
+      </div>
+      <div class="row">
+        <button id="btnResend" disabled>Resend last purchase (same trip ID)</button>
+        <button id="btnAbandon" class="danger">Abandon</button>
+      </div>
+      <div class="hint">Resend reuses the idempotent shopping trip ID, to check duplicate handling. Quantity may be 0, never negative.</div>
+    </div>
+  </section>
+
+  <!-- RIGHT: log -->
+  <section>
+    <h2>Requests <button id="btnClearLog">Clear</button></h2>
+    <div class="log" id="log"><div class="empty">No requests yet</div></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const SAVED = ['platformUrl','domain','storeId','deviceId','channel','currency','paymentSource'];
+  const LS = 'jwo-sim:v1';
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&3|8)).toString(16); }));
+
+  const trip = { id:null, start:null, cart:[], authEvents:[], shopper:null, lastPurchase:null };
+  const recent = [];
+  let logCount = 0;
+
+  /* ---------- persistence ---------- */
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(LS) || '{}');
+      SAVED.forEach(k => { if (s[k] != null) $(k).value = s[k]; });
+      if (s.rememberToken && s.token) { $('token').value = s.token; $('rememberToken').checked = true; }
+    } catch (_) {}
+    try { if (!$('token').value) $('token').value = sessionStorage.getItem(LS+':token') || ''; } catch (_) {}
+    if (!$('deviceId').value) $('deviceId').value = 'sim-device-' + uuid().slice(0,8);
+  }
+  function save() {
+    const s = {};
+    SAVED.forEach(k => s[k] = $(k).value);
+    s.rememberToken = $('rememberToken').checked;
+    if (s.rememberToken) s.token = $('token').value;
+    try { localStorage.setItem(LS, JSON.stringify(s)); } catch (_) {}
+    try { sessionStorage.setItem(LS+':token', $('token').value); } catch (_) {}
+  }
+
+  /* ---------- ui helpers ---------- */
+  function setStatus(msg, kind) { const e = $('status'); e.textContent = msg; e.className = 'status' + (kind ? ' '+kind : ''); }
+  function setGate(state, text) { $('gate').className = 'gate ' + (state||''); $('laneText').textContent = text; }
+  function setStep(n) {
+    [1,2,3].forEach(i => $('st'+i).className = 'step' + (i<n ? ' done' : i===n ? ' on' : ''));
+  }
+  function renderCart() {
+    const body = $('cartBody'); body.innerHTML = '';
+    trip.cart.forEach((c, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td style="text-align:right"></td>';
+      tr.children[0].textContent = c.id;
+      tr.children[1].textContent = c.type;
+      const q = document.createElement('input'); q.type='number'; q.min='0'; q.step='1'; q.value=c.qty;
+      q.onchange = () => { const v = Number(q.value); if (isNaN(v) || v < 0) { q.value = c.qty; return; } c.qty = v; };
+      tr.children[2].appendChild(q);
+      const rm = document.createElement('button'); rm.textContent = 'Return'; rm.onclick = () => { trip.cart.splice(i,1); renderCart(); };
+      tr.children[3].appendChild(rm);
+      body.appendChild(tr);
+    });
+    $('cartEmpty').style.display = trip.cart.length ? 'none' : '';
+    $('cartTable').style.display = trip.cart.length ? '' : 'none';
+  }
+  function renderRecent() {
+    const box = $('recent'); box.innerHTML = '';
+    recent.slice(0,8).forEach(r => {
+      const b = document.createElement('button'); b.textContent = r.id;
+      b.onclick = () => { $('itemId').value = r.id; $('itemType').value = r.type; };
+      box.appendChild(b);
+    });
+  }
+  function renderTrip() {
+    $('tripLabel').textContent = trip.id ? 'trip ' + trip.id.slice(0,8) : '';
+    $('shopperInfo').innerHTML = trip.shopper ? 'Shopper: <b></b>' : '';
+    if (trip.shopper) $('shopperInfo').querySelector('b').textContent = trip.shopper.id + ' (' + trip.shopper.type + ')';
+  }
+
+  /* ---------- http + log ---------- */
+  function buildHeaders() {
+    const h = { 'Content-Type':'application/json', 'Authorization':'Bearer ' + $('token').value.trim() };
+    return h;
+  }
+  async function call(label, path, body) {
+    const base = $('platformUrl').value.trim().replace(/\/+$/,'');
+    const url = base + path;
+    const headers = buildHeaders();
+    const t0 = performance.now();
+    let status = 0, text = '', json = null, err = null;
+    try {
+      const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
+      status = res.status; text = await res.text();
+      try { json = JSON.parse(text); } catch (_) {}
+    } catch (e) { err = e; text = String(e); }
+    const ms = Math.round(performance.now() - t0);
+    addLog({ label, url, headers, body, status, text, ms, err });
+    return { status, json, text, err, ok: status >= 200 && status < 300 };
+  }
+  function curl(url, headers, body) {
+    const h = Object.entries(headers).map(([k,v]) => `-H '${k}: ${k==='Authorization' ? 'Bearer <token>' : v}'`).join(' ');
+    return `curl -X POST '${url}' ${h} -d '${JSON.stringify(body).replace(/'/g,"'\\''")}'`;
+  }
+  function addLog(e) {
+    if (!logCount) $('log').innerHTML = '';
+    logCount++;
+    const d = document.createElement('details'); d.className = 'entry'; d.open = true;
+    const s = document.createElement('summary');
+    const badge = document.createElement('span'); badge.className = 'badge s' + String(e.status)[0]; badge.textContent = e.status || 'ERR';
+    const lab = document.createElement('b'); lab.textContent = e.label;
+    const t = document.createElement('span'); t.className = 't'; t.textContent = e.ms + ' ms · ' + new Date().toLocaleTimeString();
+    s.append(badge, lab, t);
+    const pre = document.createElement('pre');
+    let resp = e.text; try { resp = JSON.stringify(JSON.parse(e.text), null, 2); } catch (_) {}
+    if (e.err) resp += '\n(network/CORS error — check Platform URL, and that the platform allows this origin)';
+    pre.textContent = 'POST ' + e.url + '\n\n// request\n' + JSON.stringify(e.body, null, 2) + '\n\n// response\n' + (resp || '(empty body)');
+    const tools = document.createElement('div'); tools.className = 'tools';
+    const cp = document.createElement('button'); cp.textContent = 'Copy cURL';
+    cp.onclick = () => navigator.clipboard && navigator.clipboard.writeText(curl(e.url, e.headers, e.body));
+    const cj = document.createElement('button'); cj.textContent = 'Copy request JSON';
+    cj.onclick = () => navigator.clipboard && navigator.clipboard.writeText(JSON.stringify(e.body, null, 2));
+    tools.append(cp, cj);
+    d.append(s, tools, pre);
+    $('log').prepend(d);
+  }
+
+  /* ---------- payload builders (mirror JwoResolveScanRequest / JwoCreatePurchaseRequest) ---------- */
+  function envelope(payload) {
+    return { source:'jwo', merchantDomain: $('domain').value.trim(), payload };
+  }
+  function needConfig(needStore) {
+    if (!$('platformUrl').value.trim()) return 'Enter the Platform URL';
+    if (!$('domain').value.trim()) return 'Enter the merchant domain';
+    if (!$('token').value.trim()) return 'Enter a bearer token';
+    if (needStore && !$('storeId').value.trim()) return 'Enter the JWO store ID';
+    return null;
+  }
+  function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
+
+  /* ---------- actions ---------- */
+  function newTrip() {
+    trip.id = uuid(); trip.start = null; trip.cart = []; trip.authEvents = []; trip.shopper = null;
+    renderCart(); renderTrip(); setStep(1); setGate('', 'ENTER WITH APP');
+    setStatus('IDLE · scan a shopper code to enter');
+    $('btnExit').disabled = false;
+  }
+
+  async function scan() {
+    const bad = needConfig(true); if (bad) return setStatus(bad, 'err');
+    const code = $('scanValue').value;
+    if (!code.trim()) return setStatus('Enter a shopper code', 'err');
+    save();
+    const channel = $('channel').value;
+    const now = new Date().toISOString();
+    const body = envelope({
+      requestId: uuid(),
+      storeId: $('storeId').value.trim(),
+      scanEvent: {
+        id: uuid(), timestamp: now, location: 'ENTRY', channel,
+        value: channel === 'RADIO' ? code : b64(code)
+      }
+    });
+    setStatus('Scanning…');
+    const r = await call('Identify customer (entry scan)', '/external/orders/customers/identify', body);
+    if (r.ok && r.json && r.json.action === 'ACCEPT') {
+      trip.shopper = { id: r.json.id, type: r.json.type };
+      trip.start = now;
+      trip.authEvents = [{ id: uuid(), timestamp: now, location: 'ENTRY', payloadType: 'SCAN_CODE', scanResult: { id: r.json.id, type: r.json.type } }];
+      renderTrip(); setStep(2); setGate('open', 'WELCOME · GATE OPEN');
+      setStatus('ACCEPTED · shopper ' + r.json.id, 'ok');
+    } else if (r.ok && r.json && r.json.action === 'REJECT') {
+      trip.shopper = null; setGate('denied', 'ENTRY DENIED'); setStatus('REJECTED · shopper code not recognised', 'err');
+    } else {
+      setGate('denied', 'ERROR'); setStatus('Identify failed (HTTP ' + (r.status || 'network') + ') — see request log', 'err');
+    }
+  }
+
+  function addItem() {
+    const id = $('itemId').value.trim(); const qty = Number($('itemQty').value);
+    if (!id) return setStatus('Enter an item ID or UPC', 'err');
+    if (isNaN(qty) || qty < 0) return setStatus('Quantity cannot be negative', 'err');
+    const type = $('itemType').value;
+    const ex = trip.cart.find(c => c.id === id && c.type === type);
+    if (ex) ex.qty += qty; else trip.cart.push({ id, type, qty });
+    if (!recent.some(r => r.id === id)) recent.unshift({ id, type });
+    renderCart(); renderRecent(); $('itemId').value = '';
+    if (trip.shopper) setStep(2);
+  }
+
+  function purchaseBody() {
+    const end = new Date().toISOString();
+    const events = trip.authEvents.slice();
+    events.push({ id: uuid(), timestamp: end, location: 'EXIT', payloadType: 'SCAN_CODE',
+                  scanResult: trip.shopper ? { id: trip.shopper.id, type: trip.shopper.type } : undefined });
+    const body = {
+      requestId: uuid(),
+      idempotentShoppingTripId: trip.id,
+      storeId: $('storeId').value.trim(),
+      shoppingTrip: { startTime: trip.start || end, endTime: end, authEvents: events },
+      cartItems: trip.cart.map((c, i) => ({
+        id: c.id,
+        type: c.type,
+        quantity: { value: String(c.qty), unit: 'UNIT' },
+        externalIdentifiers: c.type === 'SCANCODE' ? [{ id: c.id, type: 'UPC' }] : [],
+        lineItemId: trip.id.slice(0,8) + '-' + (i+1)
+      })),
+      shopperIdentity: trip.shopper ? { id: trip.shopper.id } : undefined,
+      shopperDeviceId: $('deviceId').value.trim()
+    };
+    if ($('paymentSource').value.trim()) body.paymentSource = { id: $('paymentSource').value.trim() };
+    return body;
+  }
+
+  async function send(body, label) {
+    setStatus('Sending purchase…');
+    const r = await call(label, '/external/orders/sync', envelope(body));
+    if (r.ok) {
+      trip.lastPurchase = body; $('btnResend').disabled = false;
+      setStep(3); setGate('open', 'THANKS · GOODBYE');
+      setStatus('CREATED · purchaseId ' + (r.json && r.json.purchaseId ? r.json.purchaseId : '(none returned)'), 'ok');
+    } else {
+      setGate('denied', 'ERROR'); setStatus('Purchase failed (HTTP ' + (r.status || 'network') + ') — see request log', 'err');
+    }
+  }
+
+  async function walkOut() {
+    const bad = needConfig(true); if (bad) return setStatus(bad, 'err');
+    if (!trip.cart.length) return setStatus('Cart is empty — take at least one item', 'err');
+    save();
+    await send(purchaseBody(), 'Create purchase (exit)');
+  }
+  async function resend() {
+    if (!trip.lastPurchase) return;
+    const b = JSON.parse(JSON.stringify(trip.lastPurchase)); b.requestId = uuid();
+    await send(b, 'Create purchase (resend, same trip ID)');
+  }
+
+  /* ---------- wiring ---------- */
+  $('btnScan').onclick = scan;
+  $('btnAdd').onclick = addItem;
+  $('btnExit').onclick = walkOut;
+  $('btnResend').onclick = resend;
+  $('btnNew').onclick = () => { $('btnResend').disabled = true; trip.lastPurchase = null; newTrip(); };
+  $('btnAbandon').onclick = () => { $('btnResend').disabled = true; trip.lastPurchase = null; newTrip(); setStatus('Trip abandoned · nothing was sent'); };
+  $('btnClearLog').onclick = () => { logCount = 0; $('log').innerHTML = '<div class="empty">No requests yet</div>'; };
+  $('btnReset').onclick = () => { try { localStorage.removeItem(LS); sessionStorage.removeItem(LS+':token'); } catch (_) {} location.reload(); };
+  $('itemId').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
+  $('scanValue').addEventListener('keydown', e => { if (e.key === 'Enter') scan(); });
+  SAVED.concat(['token','rememberToken']).forEach(k => $(k).addEventListener('change', save));
+
+  load(); renderCart(); renderRecent(); newTrip();
+})();
+</script>
+</body>
+</html>
