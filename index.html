@@ -8,46 +8,42 @@
   :root {
     --bg:#eef2f1; --bg2:#e3ebe8; --panel:#ffffff; --ink:#14201c; --muted:#62736d; --line:#dbe4e0;
     --field:#f6f9f8; --accent:#0e9f6e; --accent-2:#0a7d57; --accent-ink:#ffffff; --accent-soft:#e2f5ee;
-    --bad:#d23b3b; --bad-soft:#fdeaea; --warn:#b7791f; --good:#0e9f6e;
+    --bad:#d23b3b; --bad-soft:#fdeaea; --warn:#b7791f; --warn-soft:#fff4dc; --good:#0e9f6e;
     --code:#0d1512; --code-ink:#cfe6dc; --shadow:0 1px 2px rgba(16,40,30,.06),0 8px 24px rgba(16,40,30,.06);
-    --pillar:#f7f7f4; --pillar-edge:#cfd3cd; --floor1:#d5dcd8; --floor2:#c3ccc7;
-    --radius:14px;
+    --pillar:#f7f7f4; --pillar-edge:#cfd3cd; --floor1:#d5dcd8; --floor2:#c3ccc7; --radius:14px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg:#0c1210; --bg2:#101a16; --panel:#15201c; --ink:#e7f0ec; --muted:#8fa39b; --line:#25352f;
-      --field:#101a16; --accent:#2fbf8a; --accent-2:#25a577; --accent-ink:#04140d; --accent-soft:#12302510;
-      --bad:#ef6a6a; --bad-soft:#2b1717; --warn:#e0a24a; --good:#2fbf8a;
+      --field:#101a16; --accent:#2fbf8a; --accent-2:#25a577; --accent-ink:#04140d; --accent-soft:#12302a;
+      --bad:#ef6a6a; --bad-soft:#2b1717; --warn:#e0a24a; --warn-soft:#2e2412; --good:#2fbf8a;
       --code:#080d0b; --code-ink:#bfe0d2; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);
       --pillar:#e9ebe6; --pillar-edge:#8a918b; --floor1:#1a2622; --floor2:#14201c;
     }
   }
   * { box-sizing:border-box; }
   html { -webkit-text-size-adjust:100%; }
-  body {
-    margin:0; color:var(--ink); min-height:100vh;
-    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:radial-gradient(1200px 500px at 50% -200px,var(--bg2),transparent),var(--bg);
-  }
+  body { margin:0; color:var(--ink); min-height:100vh; font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         background:radial-gradient(1200px 500px at 50% -200px,var(--bg2),transparent),var(--bg); }
 
-  /* ---------- header ---------- */
   header { display:flex; align-items:center; gap:14px; padding:14px 24px; background:var(--panel); border-bottom:1px solid var(--line); box-shadow:var(--shadow); position:sticky; top:0; z-index:5; }
   .logo { width:38px; height:38px; border-radius:11px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:grid; place-items:center; color:#fff; box-shadow:0 4px 12px rgba(14,159,110,.35); flex:none; }
   .logo svg { width:22px; height:22px; }
-  header h1 { font-size:16px; line-height:1.2; margin:0; letter-spacing:.01em; }
+  header h1 { font-size:16px; line-height:1.2; margin:0; }
   header .tag { color:var(--muted); font-size:12px; }
   .host-pill { margin-left:auto; display:flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid var(--line); border-radius:999px; background:var(--field); font-size:12px; color:var(--muted); max-width:46vw; }
   .host-pill b { color:var(--ink); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .host-pill i { width:8px; height:8px; border-radius:50%; background:var(--muted); flex:none; }
   .host-pill.set i { background:var(--good); box-shadow:0 0 0 3px rgba(14,159,110,.2); }
 
-  /* ---------- layout ---------- */
-  main { display:grid; grid-template-columns:minmax(290px,350px) minmax(420px,1fr) minmax(320px,430px); gap:20px; padding:22px 24px 40px; align-items:start; max-width:1700px; margin:0 auto; }
-  @media (max-width:1180px){ main{ grid-template-columns:1fr 1fr; } main > section:first-child{ grid-column:1/-1; } }
-  @media (max-width:760px){ main{ grid-template-columns:1fr; padding:14px 16px 32px; } header{ padding:12px 16px; } .host-pill{ display:none; } }
+  main { display:grid; grid-template-columns:minmax(280px,330px) minmax(0,1fr); gap:20px; padding:22px 24px 40px; align-items:start; max-width:1800px; margin:0 auto; }
+  @media (max-width:980px){ main{ grid-template-columns:1fr; } }
+  @media (max-width:760px){ main{ padding:14px 16px 32px; } header{ padding:12px 16px; } .host-pill{ display:none; } }
+  .side { position:sticky; top:84px; max-height:calc(100vh - 100px); overflow:auto; }
+  @media (max-width:980px){ .side{ position:static; max-height:none; } }
 
-  section { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
-  section h2 { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 14px; display:flex; justify-content:space-between; align-items:center; font-weight:700; }
+  section, .gcard { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
+  h2 { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 14px; display:flex; justify-content:space-between; align-items:center; font-weight:700; }
   h2 .ic { display:inline-flex; align-items:center; gap:8px; }
   h2 .ic svg { width:15px; height:15px; color:var(--accent); }
 
@@ -57,6 +53,8 @@
   input[type=checkbox] { width:auto; accent-color:var(--accent); }
   ::placeholder { color:#93a39d; }
   code { background:var(--field); border:1px solid var(--line); padding:0 5px; border-radius:5px; font-size:12px; }
+  fieldset { border:1px solid var(--line); border-radius:11px; padding:0 14px 12px; margin:16px 0 0; }
+  fieldset > legend { padding:0 8px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
 
   button { padding:9px 14px; border:1px solid var(--line); border-radius:9px; background:var(--panel); color:var(--ink); font:inherit; font-weight:600; cursor:pointer; transition:transform .06s, border-color .15s, background .15s, box-shadow .15s; }
   button:hover:not(:disabled) { border-color:var(--accent); background:var(--accent-soft); }
@@ -66,7 +64,7 @@
   button.primary:hover:not(:disabled) { filter:brightness(1.06); background:linear-gradient(180deg,var(--accent),var(--accent-2)); }
   button.danger { color:var(--bad); }
   button.danger:hover:not(:disabled) { border-color:var(--bad); background:var(--bad-soft); }
-  button.ghost { padding:4px 10px; font-size:12px; font-weight:600; color:var(--muted); }
+  button.ghost { padding:4px 10px; font-size:12px; color:var(--muted); }
   button:disabled { opacity:.45; cursor:not-allowed; }
 
   .row { display:flex; gap:10px; align-items:end; }
@@ -76,39 +74,46 @@
   .hint { font-size:12px; color:var(--muted); margin-top:8px; }
   .kv { font-size:12px; color:var(--muted); word-break:break-all; }
   .kv b { color:var(--ink); font-weight:600; }
-  .divider { border:0; border-top:1px dashed var(--line); margin:18px 0 6px; }
+  .chk { display:flex; gap:8px; align-items:flex-start; margin:12px 0 0; font-weight:500; color:var(--ink); line-height:1.4; }
+  .chk input { margin-top:3px; }
 
-  /* ---------- stepper ---------- */
-  .steps { display:flex; align-items:center; margin:2px 0 16px; }
-  .step { flex:none; display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:var(--muted); }
-  .step .n { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--field); border:1px solid var(--line); font-size:12px; transition:all .25s; }
+  /* toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+  .toolbar .grow { flex:1; }
+  .toolbar .count { color:var(--muted); font-size:12px; font-weight:600; }
+
+  /* gates grid */
+  .gates { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr)); gap:20px; align-items:start; }
+  .gcard-h { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .gcard-h .gname { font-weight:800; font-size:15px; }
+  .gcard-h .tools { margin-left:auto; display:flex; gap:6px; }
+
+  .steps { display:flex; align-items:center; margin:2px 0 12px; }
+  .step { flex:none; display:flex; align-items:center; gap:7px; font-size:12px; font-weight:600; color:var(--muted); }
+  .step .n { width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--field); border:1px solid var(--line); font-size:11.5px; transition:all .25s; }
   .step.on { color:var(--ink); }
   .step.on .n { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); box-shadow:0 0 0 4px rgba(14,159,110,.18); }
   .step.done { color:var(--good); }
   .step.done .n { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
   .step.done .n::before { content:"\2713"; }
   .step.done .n span { display:none; }
-  .bar { flex:1; height:2px; background:var(--line); margin:0 10px; border-radius:2px; min-width:14px; }
-  @media (max-width:520px){ .step .t { display:none; } }
+  .bar { flex:1; height:2px; background:var(--line); margin:0 8px; border-radius:2px; min-width:10px; }
 
-  /* ---------- store scene ---------- */
-  .scene { position:relative; border-radius:12px; overflow:hidden; margin:2px 0 14px; border:1px solid var(--line);
+  .scene { position:relative; border-radius:12px; overflow:hidden; margin:2px 0 12px; border:1px solid var(--line);
            background:linear-gradient(180deg,var(--bg2) 0%,var(--field) 55%,var(--floor1) 55%,var(--floor2) 100%); }
-  .shelf { display:flex; gap:5px; padding:12px 14px 0; justify-content:center; opacity:.9; }
-  .shelf i { width:26px; height:34px; border-radius:4px 4px 2px 2px; background:var(--c); box-shadow:inset 0 -6px 0 rgba(0,0,0,.12); }
-  .banner { margin:10px auto 0; width:max-content; max-width:92%; display:flex; align-items:center; gap:10px; padding:7px 18px; background:linear-gradient(180deg,#14b57e,#0b8f64); color:#fff; border-radius:8px; font-weight:800; font-size:13px; letter-spacing:.06em; box-shadow:0 4px 14px rgba(14,159,110,.4); text-align:center; }
-  .banner svg { width:18px; height:18px; flex:none; }
-  .gate { position:relative; display:flex; align-items:flex-end; justify-content:center; height:150px; padding:0 8px 12px; }
-  .pillar { position:relative; width:58px; height:116px; background:linear-gradient(90deg,#fff,var(--pillar)); border:1px solid var(--pillar-edge); border-radius:9px 9px 5px 5px; box-shadow:0 8px 14px rgba(0,0,0,.18); flex:none; z-index:2; }
-  .pillar::after { content:"JUST\AWALK\AOUT"; white-space:pre; position:absolute; left:0; right:0; top:44px; text-align:center; font-size:9px; line-height:1.15; font-weight:900; letter-spacing:.06em; color:#1b2420; }
-  .pillar .lamp { position:absolute; top:9px; left:50%; width:16px; height:16px; margin-left:-8px; border-radius:50%; background:#8a948f; border:2px solid rgba(255,255,255,.7); transition:background .25s, box-shadow .25s; }
-  .pillar .slot { position:absolute; top:26px; left:12px; right:12px; height:8px; border-radius:4px; background:#2a332f; opacity:.85; }
-  .lane { position:relative; width:min(46%,230px); height:100%; display:flex; align-items:flex-end; justify-content:center; overflow:hidden; }
-  .lane .led { margin-bottom:6px; padding:4px 12px; border-radius:6px; background:#0b1210; color:#7a8a83; font:700 11px/1.3 ui-monospace,Menlo,Consolas,monospace; letter-spacing:.1em; text-align:center; transition:all .25s; border:1px solid #1d2a25; white-space:nowrap; position:relative; z-index:1; }
+  .banner { margin:12px auto 0; width:max-content; max-width:92%; display:flex; align-items:center; gap:10px; padding:6px 16px; background:linear-gradient(180deg,#14b57e,#0b8f64); color:#fff; border-radius:8px; font-weight:800; font-size:12px; letter-spacing:.06em; box-shadow:0 4px 14px rgba(14,159,110,.4); }
+  .banner svg { width:16px; height:16px; flex:none; }
+  .gate { position:relative; display:flex; align-items:flex-end; justify-content:center; height:138px; padding:0 8px 10px; }
+  .pillar { position:relative; width:52px; height:106px; background:linear-gradient(90deg,#fff,var(--pillar)); border:1px solid var(--pillar-edge); border-radius:9px 9px 5px 5px; box-shadow:0 8px 14px rgba(0,0,0,.18); flex:none; z-index:2; }
+  .pillar::after { content:"JUST\AWALK\AOUT"; white-space:pre; position:absolute; left:0; right:0; top:40px; text-align:center; font-size:8.5px; line-height:1.15; font-weight:900; letter-spacing:.06em; color:#1b2420; }
+  .pillar .lamp { position:absolute; top:8px; left:50%; width:15px; height:15px; margin-left:-7.5px; border-radius:50%; background:#8a948f; border:2px solid rgba(255,255,255,.7); transition:background .25s, box-shadow .25s; }
+  .pillar .slot { position:absolute; top:24px; left:11px; right:11px; height:7px; border-radius:4px; background:#2a332f; opacity:.85; }
+  .lane { position:relative; width:min(46%,220px); height:100%; display:flex; align-items:flex-end; justify-content:center; overflow:hidden; }
+  .lane .led { margin-bottom:6px; padding:4px 10px; border-radius:6px; background:#0b1210; color:#7a8a83; font:700 10.5px/1.3 ui-monospace,Menlo,Consolas,monospace; letter-spacing:.1em; text-align:center; transition:all .25s; border:1px solid #1d2a25; white-space:nowrap; position:relative; z-index:1; }
   .lane::before { content:""; position:absolute; left:10%; right:10%; bottom:0; height:6px; border-radius:3px; background:var(--line); transition:background .25s; }
-  .walker { position:absolute; bottom:26px; left:-30px; width:26px; height:62px; opacity:0; }
-  .walker::before { content:""; position:absolute; top:0; left:5px; width:16px; height:16px; border-radius:50%; background:#31403a; }
-  .walker::after  { content:""; position:absolute; top:19px; left:2px; width:22px; height:40px; border-radius:11px 11px 5px 5px; background:linear-gradient(180deg,var(--accent),var(--accent-2)); }
+  .walker { position:absolute; bottom:26px; left:-30px; width:24px; height:58px; opacity:0; }
+  .walker::before { content:""; position:absolute; top:0; left:4px; width:15px; height:15px; border-radius:50%; background:#31403a; }
+  .walker::after  { content:""; position:absolute; top:18px; left:2px; width:20px; height:38px; border-radius:10px 10px 5px 5px; background:linear-gradient(180deg,var(--accent),var(--accent-2)); }
   .gate.open .pillar .lamp { background:#26d98c; box-shadow:0 0 16px 3px rgba(38,217,140,.7); }
   .gate.open .lane .led { background:#0b2a1f; color:#46f0a8; border-color:#14573e; }
   .gate.open .lane::before { background:var(--accent); }
@@ -120,41 +125,63 @@
   @keyframes blink { 50%{ opacity:.25; } }
   @media (prefers-reduced-motion:reduce){ .gate.open .walker, .gate.denied .pillar .lamp { animation:none; } }
 
-  .status { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; padding:10px 14px; border-radius:10px; background:var(--field); border:1px solid var(--line); }
+  .status { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; padding:9px 13px; border-radius:10px; background:var(--field); border:1px solid var(--line); }
   .status::before { content:""; width:9px; height:9px; border-radius:50%; background:var(--muted); flex:none; }
   .status.ok { background:var(--accent-soft); border-color:rgba(14,159,110,.35); color:var(--accent-2); }
   .status.ok::before { background:var(--good); box-shadow:0 0 0 3px rgba(14,159,110,.2); }
   .status.err { background:var(--bad-soft); border-color:rgba(210,59,59,.35); color:var(--bad); }
   .status.err::before { background:var(--bad); }
-  @media (prefers-color-scheme: dark){ .status.ok { background:#12302a; color:var(--accent); } }
+  @media (prefers-color-scheme: dark){ .status.ok { color:var(--accent); } }
 
-  /* ---------- cart ---------- */
   .chips { display:flex; gap:6px; flex-wrap:wrap; }
   .chips:empty { display:none; }
   .chips button { font-size:12px; padding:3px 10px; border-radius:999px; font-weight:500; font-family:ui-monospace,Menlo,monospace; }
-  table { width:100%; border-collapse:separate; border-spacing:0 6px; font-size:13px; }
-  th { text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:700; padding:0 10px 2px; }
-  td { padding:8px 10px; background:var(--field); vertical-align:middle; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-  td:first-child { border-left:1px solid var(--line); border-radius:9px 0 0 9px; font-family:ui-monospace,Menlo,monospace; font-weight:600; word-break:break-all; }
-  td:last-child { border-right:1px solid var(--line); border-radius:0 9px 9px 0; }
-  td:nth-child(2) { color:var(--muted); font-size:11.5px; font-weight:700; letter-spacing:.06em; }
-  td input { padding:5px 8px; width:72px; }
-  td button { padding:4px 10px; font-size:12px; }
-  .empty { color:var(--muted); font-size:13px; padding:22px 0; text-align:center; border:1px dashed var(--line); border-radius:10px; background:var(--field); }
 
-  /* ---------- log ---------- */
-  .log { max-height:calc(100vh - 150px); min-height:120px; overflow:auto; padding-right:2px; }
+  /* live cart display */
+  .disp { border-radius:12px; background:var(--code); color:var(--code-ink); overflow:hidden; border:1px solid #1d2a25; }
+  .disp-h { display:flex; align-items:center; gap:10px; padding:9px 12px; background:#0b1a14; border-bottom:1px solid #1d2a25; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:800; color:#7fe3b8; }
+  .disp-h .sync { margin-left:auto; display:flex; align-items:center; gap:7px; letter-spacing:0; text-transform:none; font-weight:600; color:#9ab5a9; font-size:11.5px; }
+  .disp-h .sync i { width:8px; height:8px; border-radius:50%; background:#6c7d75; }
+  .disp-h .sync.live i { background:#26d98c; box-shadow:0 0 0 3px rgba(38,217,140,.2); }
+  .disp-h .sync.busy i { background:#f2b84b; animation:blink .8s infinite; }
+  .disp-h .sync.bad i { background:#ff5757; }
+  .disp-body { padding:6px 12px; min-height:70px; }
+  .ln { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:2px 12px; align-items:center; padding:8px 0; border-bottom:1px dashed #243630; }
+  .ln:last-child { border-bottom:0; }
+  .ln.pending { opacity:.55; }
+  .ln .nm { font-weight:700; color:#e7f6ef; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ln .sub { grid-column:1; font:11px ui-monospace,Menlo,monospace; color:#7c9489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ln .amt { grid-column:2 / span 2; text-align:right; font:700 13px ui-monospace,Menlo,monospace; color:#e7f6ef; }
+  .ln .amt s { color:#7c9489; font-weight:500; }
+  .ln .ctl { grid-column:2 / span 2; display:flex; justify-content:flex-end; gap:4px; align-items:center; }
+  .ln .ctl button { padding:1px 9px; font-size:13px; line-height:1.4; background:#12241c; color:#cfe6dc; border-color:#243630; }
+  .ln .ctl button:hover:not(:disabled) { background:#1a3629; border-color:#2fbf8a; }
+  .ln .ctl .q { min-width:26px; text-align:center; font:700 12.5px ui-monospace,Menlo,monospace; color:#e7f6ef; }
+  .disp-empty { color:#6c8277; text-align:center; padding:22px 0; font-size:13px; }
+  .disp-t { border-top:1px solid #243630; padding:8px 12px 10px; font:12.5px ui-monospace,Menlo,monospace; }
+  .disp-t div { display:flex; justify-content:space-between; color:#9ab5a9; padding:1px 0; }
+  .disp-t .tot { color:#e7f6ef; font-weight:800; font-size:15px; padding-top:5px; margin-top:4px; border-top:1px dashed #243630; }
+  .disp-w { padding:8px 12px; background:#2e2412; color:#f2c46d; font-size:12px; border-top:1px solid #4a3a1a; }
+  .disp-w + .disp-w { border-top:0; }
+
+  .log-card { margin-top:22px; }
+  .log-tools { display:flex; gap:10px; align-items:center; }
+  .log-tools select { width:auto; padding:4px 8px; font-size:12px; }
+  .log { max-height:520px; min-height:120px; overflow:auto; padding-right:2px; }
   .entry { border:1px solid var(--line); border-radius:11px; margin-bottom:10px; overflow:hidden; background:var(--field); }
-  .entry summary { cursor:pointer; padding:9px 12px; display:flex; gap:9px; align-items:center; font-size:12.5px; list-style:none; }
+  .entry.hide { display:none; }
+  .entry summary { cursor:pointer; padding:9px 12px; display:flex; gap:9px; align-items:center; font-size:12.5px; list-style:none; flex-wrap:wrap; }
   .entry summary::-webkit-details-marker { display:none; }
   .entry summary::before { content:"\25B8"; color:var(--muted); transition:transform .15s; }
   .entry[open] summary::before { transform:rotate(90deg); }
   .badge { padding:2px 8px; border-radius:999px; font-weight:800; font-size:11px; color:#fff; background:var(--muted); min-width:38px; text-align:center; }
   .badge.s2 { background:var(--good); } .badge.s4, .badge.s5, .badge.s0 { background:var(--bad); }
+  .gtag { font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; padding:2px 8px; border-radius:6px; border:1px solid var(--accent); color:var(--accent); }
   .entry pre { margin:0; padding:12px 14px; background:var(--code); color:var(--code-ink); font:11.5px/1.55 ui-monospace,Menlo,Consolas,monospace; overflow:auto; max-height:280px; }
   .entry .tools { padding:0 12px 9px; display:flex; gap:6px; }
-  .entry .tools button { font-size:11px; padding:2px 9px; font-weight:600; }
+  .entry .tools button { font-size:11px; padding:2px 9px; }
   .t { color:var(--muted); margin-left:auto; font-size:11.5px; white-space:nowrap; }
+  .empty { color:var(--muted); font-size:13px; padding:22px 0; text-align:center; border:1px dashed var(--line); border-radius:10px; background:var(--field); }
   .foot { text-align:center; color:var(--muted); font-size:12px; padding:0 16px 28px; }
 </style>
 </head>
@@ -171,8 +198,8 @@
 </header>
 
 <main>
-  <!-- LEFT: configuration -->
-  <section class="stack">
+  <!-- SIDE: shared configuration -->
+  <section class="side stack">
     <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Connection</span> <button class="ghost" id="btnReset" title="Clear saved settings">Reset</button></h2>
     <div>
       <label for="platformUrl">Platform URL</label>
@@ -193,7 +220,7 @@
         <input id="storeId" placeholder="matches auth config">
       </div>
       <div>
-        <label for="deviceId">Shopper device ID</label>
+        <label for="deviceId">Device ID prefix</label>
         <input id="deviceId">
       </div>
     </div>
@@ -215,222 +242,150 @@
       <label for="paymentSource">Payment source ID <span style="font-weight:400">(optional)</span></label>
       <input id="paymentSource" placeholder="JWO payment source id">
     </div>
-    <div class="kv">Settings are saved in this browser only. The token stays in this tab unless &ldquo;remember&rdquo; is ticked.</div>
+
+    <fieldset>
+      <legend>Live cart display</legend>
+      <label class="chk"><input type="checkbox" id="mirror" checked><span>Mirror each gate&rsquo;s basket into RC&rsquo;s cart API and show RC&rsquo;s priced cart</span></label>
+      <label for="cartHost">Cart API host <span style="font-weight:400">(defaults to Platform URL)</span></label>
+      <input id="cartHost" placeholder="https://your-transactions-host" autocomplete="off">
+      <label for="entStore">Store ID for Entitlement header <span style="font-weight:400">(optional)</span></label>
+      <input id="entStore" placeholder="RC store ID" autocomplete="off">
+      <div class="hint">Uses <code>/console/transactions/carts</code>. Each gate opens its own cart, updates it as items are taken or returned, re-reads it every few seconds, and abandons it on exit. The cart is for display only; the purchase is still sent through the JWO call.</div>
+    </fieldset>
+
+    <div class="kv" style="margin-top:14px">Settings are saved in this browser only. The token stays in this tab unless &ldquo;remember&rdquo; is ticked.</div>
   </section>
 
-  <!-- MIDDLE: store flow -->
-  <section>
-    <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg>Store</span> <span class="kv" id="tripLabel"></span></h2>
-
-    <div class="steps" aria-label="Progress">
-      <div class="step on" id="st1"><span class="n"><span>1</span></span><span class="t">Entry scan</span></div>
-      <div class="bar"></div>
-      <div class="step" id="st2"><span class="n"><span>2</span></span><span class="t">Shop</span></div>
-      <div class="bar"></div>
-      <div class="step" id="st3"><span class="n"><span>3</span></span><span class="t">Exit &amp; purchase</span></div>
+  <!-- MAIN: gates + log -->
+  <div>
+    <div class="toolbar">
+      <button class="primary" id="btnAddGate">+ Add gate</button>
+      <button id="btnScanAll" title="Scan the code typed in every gate at the same time">Scan all</button>
+      <button id="btnExitAll" title="Send every gate's purchase at the same time">Walk out all</button>
+      <span class="grow"></span>
+      <span class="count" id="gateCount"></span>
     </div>
+    <div class="gates" id="gates"></div>
 
+    <section class="log-card">
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Requests</span>
+        <span class="log-tools"><select id="logFilter" aria-label="Filter by gate"><option value="">All gates</option></select><button class="ghost" id="btnClearLog">Clear</button></span></h2>
+      <div class="log" id="log"><div class="empty">No requests yet</div></div>
+    </section>
+  </div>
+</main>
+<div class="foot">Runs entirely in your browser &middot; requests go only to the URLs you enter</div>
+
+<template id="gateTpl">
+  <article class="gcard">
+    <div class="gcard-h">
+      <span class="gname" data-r="name"></span><span class="kv" data-r="trip"></span>
+      <span class="tools"><button class="ghost" data-r="remove" title="Remove this gate">&#10005;</button></span>
+    </div>
+    <div class="steps" aria-label="Progress">
+      <div class="step on" data-r="st1"><span class="n"><span>1</span></span><span>Enter</span></div><div class="bar"></div>
+      <div class="step" data-r="st2"><span class="n"><span>2</span></span><span>Shop</span></div><div class="bar"></div>
+      <div class="step" data-r="st3"><span class="n"><span>3</span></span><span>Exit</span></div>
+    </div>
     <div class="scene">
-      <div class="shelf" aria-hidden="true">
-        <i style="--c:#f2b84b"></i><i style="--c:#58b6a0"></i><i style="--c:#e86f6f"></i><i style="--c:#6f8fe8"></i><i style="--c:#f2b84b"></i><i style="--c:#7bc47f"></i><i style="--c:#e86f6f"></i><i style="--c:#58b6a0"></i><i style="--c:#6f8fe8"></i><i style="--c:#f2b84b"></i>
-      </div>
       <div class="banner">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
         ENTER WITH APP
       </div>
-      <div class="gate" id="gate">
+      <div class="gate" data-r="gate">
         <div class="pillar"><div class="lamp"></div><div class="slot"></div></div>
-        <div class="lane"><div class="walker"></div><div class="led" id="laneText">ENTER WITH APP</div></div>
+        <div class="lane"><div class="walker"></div><div class="led" data-r="lane">ENTER WITH APP</div></div>
         <div class="pillar"><div class="lamp"></div><div class="slot"></div></div>
       </div>
     </div>
-
     <div class="stack">
-      <div id="status" class="status" role="status">IDLE &middot; scan a shopper code to enter</div>
-
+      <div class="status" data-r="status" role="status"></div>
       <div class="row">
-        <div>
-          <label for="scanValue">Shopper code (QR value)</label>
-          <input id="scanValue" placeholder="loyalty / member number" autocomplete="off">
-        </div>
-        <button class="primary" id="btnScan">Scan at entry</button>
+        <div><label>Shopper QR code <span style="font-weight:400">(optional)</span></label><input data-r="scan" placeholder="loyalty / member number" autocomplete="off"></div>
+        <div style="max-width:112px"><label>Scanned at</label><select data-r="scanAt"><option value="ENTRY">Entry</option><option value="MANUAL_IN_STORE">In store</option><option value="EXIT">Exit</option></select></div>
       </div>
-      <div class="kv" id="shopperInfo"></div>
-
-      <hr class="divider">
-
       <div class="row">
-        <div>
-          <label for="itemId">Item ID / UPC</label>
-          <input id="itemId" placeholder="sent exactly as typed" autocomplete="off">
-        </div>
-        <div style="max-width:84px">
-          <label for="itemQty">Qty</label>
-          <input id="itemQty" type="number" min="0" step="1" value="1">
-        </div>
-        <div style="max-width:128px">
-          <label for="itemType">Type</label>
-          <select id="itemType"><option>SKU</option><option>SCANCODE</option></select>
-        </div>
-        <button id="btnAdd">+ Take</button>
+        <button class="primary" data-r="btnScan" style="flex:1">Scan QR</button>
+        <button data-r="btnAnon" style="flex:1" title="Enter without identifying: no request is sent, and the purchase carries no shopper identity">Walk in without scanning</button>
       </div>
-      <div class="chips" id="recent"></div>
+      <div class="kv" data-r="shopper"></div>
+      <div class="row">
+        <div><label>Item ID / UPC</label><input data-r="itemId" placeholder="sent as typed" autocomplete="off"></div>
+        <div style="max-width:76px"><label>Qty</label><input data-r="itemQty" type="number" min="0" step="1" value="1"></div>
+        <div style="max-width:118px"><label>Type</label><select data-r="itemType"><option>SKU</option><option>SCANCODE</option></select></div>
+        <button data-r="btnAdd">+ Take</button>
+      </div>
+      <div class="chips" data-r="recent"></div>
 
-      <div>
-        <table id="cartTable">
-          <thead><tr><th>Item</th><th>Type</th><th>Qty</th><th></th></tr></thead>
-          <tbody id="cartBody"></tbody>
-        </table>
-        <div class="empty" id="cartEmpty">Cart is empty &mdash; take an item off the shelf</div>
+      <div class="disp">
+        <div class="disp-h"><span>Cart display</span><span class="sync" data-r="sync"><i></i><span data-r="syncText">local only</span></span></div>
+        <div class="disp-body" data-r="lines"></div>
+        <div data-r="warns"></div>
+        <div class="disp-t" data-r="totals" hidden></div>
       </div>
 
       <div class="row">
-        <button id="btnNew">New trip</button>
-        <button class="primary" id="btnExit" style="flex:1">Walk out &rarr; send purchase</button>
+        <button data-r="btnNew">New trip</button>
+        <button class="primary" data-r="btnExit" style="flex:1">Walk out &rarr; send purchase</button>
       </div>
       <div class="row">
-        <button id="btnResend" disabled style="flex:1">Resend last purchase (same trip ID)</button>
-        <button id="btnAbandon" class="danger">Abandon</button>
+        <button data-r="btnResend" disabled style="flex:1">Resend last purchase (same trip ID)</button>
+        <button class="danger" data-r="btnAbandon">Abandon</button>
       </div>
-      <div class="hint">Resend reuses the idempotent shopping trip ID to check duplicate handling. Quantity may be 0, never negative.</div>
     </div>
-  </section>
-
-  <!-- RIGHT: log -->
-  <section>
-    <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Requests</span> <button class="ghost" id="btnClearLog">Clear</button></h2>
-    <div class="log" id="log"><div class="empty">No requests yet</div></div>
-  </section>
-</main>
-<div class="foot">Runs entirely in your browser &middot; requests go only to the Platform URL you enter</div>
+  </article>
+</template>
 
 <script>
-
 (() => {
   const $ = id => document.getElementById(id);
-  const SAVED = ['platformUrl','domain','storeId','deviceId','channel','currency','paymentSource'];
-  const LS = 'jwo-sim:v1';
+  const SAVED = ['platformUrl','domain','storeId','deviceId','channel','currency','paymentSource','cartHost','entStore'];
+  const LS = 'jwo-sim:v2';
+  const MAX_GATES = 8, POLL_MS = 3000, MAX_LOG = 250;
   const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&3|8)).toString(16); }));
 
-  const trip = { id:null, start:null, cart:[], authEvents:[], shopper:null, lastPurchase:null };
+  const gates = [];
   const recent = [];
-  let logCount = 0;
+  let seq = 0, logCount = 0;
 
   /* ---------- persistence ---------- */
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(LS) || '{}');
       SAVED.forEach(k => { if (s[k] != null) $(k).value = s[k]; });
+      $('mirror').checked = s.mirror !== false;
       if (s.rememberToken && s.token) { $('token').value = s.token; $('rememberToken').checked = true; }
     } catch (_) {}
     try { if (!$('token').value) $('token').value = sessionStorage.getItem(LS+':token') || ''; } catch (_) {}
-    if (!$('deviceId').value) $('deviceId').value = 'sim-device-' + uuid().slice(0,8);
+    if (!$('deviceId').value) $('deviceId').value = 'sim-' + uuid().slice(0,6);
   }
   function save() {
     const s = {};
     SAVED.forEach(k => s[k] = $(k).value);
-    updateHost();
+    s.mirror = $('mirror').checked;
     s.rememberToken = $('rememberToken').checked;
     if (s.rememberToken) s.token = $('token').value;
     try { localStorage.setItem(LS, JSON.stringify(s)); } catch (_) {}
     try { sessionStorage.setItem(LS+':token', $('token').value); } catch (_) {}
-  }
-
-  /* ---------- ui helpers ---------- */
-  function setStatus(msg, kind) { const e = $('status'); e.textContent = msg; e.className = 'status' + (kind ? ' '+kind : ''); }
-  function setGate(state, text) {
-    const g = $('gate'); g.className = 'gate'; void g.offsetWidth; // restart the walk animation
-    g.className = 'gate ' + (state||''); $('laneText').textContent = text;
+    updateHost();
   }
   function updateHost() {
     const v = $('platformUrl').value.trim(); let h = '';
     try { h = v ? new URL(v).host : ''; } catch (_) { h = v; }
     $('hostText').textContent = h || 'not configured'; $('hostPill').className = 'host-pill' + (h ? ' set' : '');
   }
-  function setStep(n) {
-    [1,2,3].forEach(i => $('st'+i).className = 'step' + (i<n ? ' done' : i===n ? ' on' : ''));
-  }
-  function renderCart() {
-    const body = $('cartBody'); body.innerHTML = '';
-    trip.cart.forEach((c, i) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td></td><td></td><td style="text-align:right"></td>';
-      tr.children[0].textContent = c.id;
-      tr.children[1].textContent = c.type;
-      const q = document.createElement('input'); q.type='number'; q.min='0'; q.step='1'; q.value=c.qty;
-      q.onchange = () => { const v = Number(q.value); if (isNaN(v) || v < 0) { q.value = c.qty; return; } c.qty = v; };
-      tr.children[2].appendChild(q);
-      const rm = document.createElement('button'); rm.textContent = 'Return'; rm.onclick = () => { trip.cart.splice(i,1); renderCart(); };
-      tr.children[3].appendChild(rm);
-      body.appendChild(tr);
-    });
-    $('cartEmpty').style.display = trip.cart.length ? 'none' : '';
-    $('cartTable').style.display = trip.cart.length ? '' : 'none';
-  }
-  function renderRecent() {
-    const box = $('recent'); box.innerHTML = '';
-    recent.slice(0,8).forEach(r => {
-      const b = document.createElement('button'); b.textContent = r.id;
-      b.onclick = () => { $('itemId').value = r.id; $('itemType').value = r.type; };
-      box.appendChild(b);
-    });
-  }
-  function renderTrip() {
-    $('tripLabel').textContent = trip.id ? 'trip ' + trip.id.slice(0,8) : '';
-    $('shopperInfo').innerHTML = trip.shopper ? 'Shopper: <b></b>' : '';
-    if (trip.shopper) $('shopperInfo').querySelector('b').textContent = trip.shopper.id + ' (' + trip.shopper.type + ')';
-  }
 
-  /* ---------- http + log ---------- */
-  function buildHeaders() {
-    const h = { 'Content-Type':'application/json', 'Authorization':'Bearer ' + $('token').value.trim() };
-    return h;
-  }
-  async function call(label, path, body) {
-    const base = $('platformUrl').value.trim().replace(/\/+$/,'');
-    const url = base + path;
-    const headers = buildHeaders();
-    const t0 = performance.now();
-    let status = 0, text = '', json = null, err = null;
-    try {
-      const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
-      status = res.status; text = await res.text();
-      try { json = JSON.parse(text); } catch (_) {}
-    } catch (e) { err = e; text = String(e); }
-    const ms = Math.round(performance.now() - t0);
-    addLog({ label, url, headers, body, status, text, ms, err });
-    return { status, json, text, err, ok: status >= 200 && status < 300 };
-  }
-  function curl(url, headers, body) {
-    const h = Object.entries(headers).map(([k,v]) => `-H '${k}: ${k==='Authorization' ? 'Bearer <token>' : v}'`).join(' ');
-    return `curl -X POST '${url}' ${h} -d '${JSON.stringify(body).replace(/'/g,"'\\''")}'`;
-  }
-  function addLog(e) {
-    if (!logCount) $('log').innerHTML = '';
-    logCount++;
-    const d = document.createElement('details'); d.className = 'entry'; d.open = true;
-    const s = document.createElement('summary');
-    const badge = document.createElement('span'); badge.className = 'badge s' + String(e.status)[0]; badge.textContent = e.status || 'ERR';
-    const lab = document.createElement('b'); lab.textContent = e.label;
-    const t = document.createElement('span'); t.className = 't'; t.textContent = e.ms + ' ms · ' + new Date().toLocaleTimeString();
-    s.append(badge, lab, t);
-    const pre = document.createElement('pre');
-    let resp = e.text; try { resp = JSON.stringify(JSON.parse(e.text), null, 2); } catch (_) {}
-    if (e.err) resp += '\n(network/CORS error — check Platform URL, and that the platform allows this origin)';
-    pre.textContent = 'POST ' + e.url + '\n\n// request\n' + JSON.stringify(e.body, null, 2) + '\n\n// response\n' + (resp || '(empty body)');
-    const tools = document.createElement('div'); tools.className = 'tools';
-    const cp = document.createElement('button'); cp.textContent = 'Copy cURL';
-    cp.onclick = () => navigator.clipboard && navigator.clipboard.writeText(curl(e.url, e.headers, e.body));
-    const cj = document.createElement('button'); cj.textContent = 'Copy request JSON';
-    cj.onclick = () => navigator.clipboard && navigator.clipboard.writeText(JSON.stringify(e.body, null, 2));
-    tools.append(cp, cj);
-    d.append(s, tools, pre);
-    $('log').prepend(d);
-  }
-
-  /* ---------- payload builders (mirror JwoResolveScanRequest / JwoCreatePurchaseRequest) ---------- */
-  function envelope(payload) {
-    return { source:'jwo', merchantDomain: $('domain').value.trim(), payload };
+  /* ---------- config helpers ---------- */
+  const platform = () => $('platformUrl').value.trim().replace(/\/+$/, '');
+  const cartBase = () => ($('cartHost').value.trim().replace(/\/+$/, '') || platform()) + '/console/transactions/carts';
+  const deviceOf = g => ($('deviceId').value.trim() || 'sim-device') + '-' + g.n;
+  const cur = () => ($('currency').value.trim() || 'USD').toUpperCase();
+  const mirrorOn = () => $('mirror').checked && /^https?:\/\//.test(cartBase()) && !!$('token').value.trim();
+  const b64 = s => btoa(unescape(encodeURIComponent(s)));
+  function money(v) {
+    if (v == null || v === '' || isNaN(Number(v))) return '—';
+    try { return new Intl.NumberFormat(undefined, { style:'currency', currency:cur() }).format(Number(v)); }
+    catch (_) { return Number(v).toFixed(2); }
   }
   function needConfig(needStore) {
     if (!$('platformUrl').value.trim()) return 'Enter the Platform URL';
@@ -439,121 +394,433 @@
     if (needStore && !$('storeId').value.trim()) return 'Enter the JWO store ID';
     return null;
   }
-  function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
+  const envelope = payload => ({ source:'jwo', merchantDomain: $('domain').value.trim(), payload });
 
-  /* ---------- actions ---------- */
-  function newTrip() {
-    trip.id = uuid(); trip.start = null; trip.cart = []; trip.authEvents = []; trip.shopper = null;
-    renderCart(); renderTrip(); setStep(1); setGate('', 'ENTER WITH APP');
-    setStatus('IDLE · scan a shopper code to enter');
-    $('btnExit').disabled = false;
+  /* ---------- http + log ---------- */
+  async function http(g, label, method, url, { body, headers = {}, quiet = false } = {}) {
+    const h = Object.assign({ 'Authorization': 'Bearer ' + $('token').value.trim() }, headers);
+    if (body !== undefined) h['Content-Type'] = 'application/json';
+    const t0 = performance.now();
+    let status = 0, text = '', json = null, err = null;
+    try {
+      const res = await fetch(url, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) });
+      status = res.status; text = await res.text();
+      try { json = JSON.parse(text); } catch (_) {}
+    } catch (e) { err = e; text = String(e); }
+    const ms = Math.round(performance.now() - t0);
+    if (!quiet) addLog({ gate: g, label, method, url, headers: h, body, status, text, ms, err });
+    return { status, json, text, err, ok: status >= 200 && status < 300, ms };
+  }
+  const call = (g, label, path, body) => http(g, label, 'POST', platform() + path, { body });
+
+  function curl(e) {
+    const h = Object.entries(e.headers).map(([k,v]) => `-H '${k}: ${k==='Authorization' ? 'Bearer <token>' : v}'`).join(' ');
+    const d = e.body === undefined ? '' : ` -d '${JSON.stringify(e.body).replace(/'/g,"'\\''")}'`;
+    return `curl -X ${e.method} '${e.url}' ${h}${d}`;
+  }
+  function addLog(e) {
+    if (!logCount) $('log').innerHTML = '';
+    logCount++;
+    const d = document.createElement('details'); d.className = 'entry'; d.open = true; d.dataset.gate = e.gate ? e.gate.n : '';
+    const s = document.createElement('summary');
+    const badge = document.createElement('span'); badge.className = 'badge s' + String(e.status)[0]; badge.textContent = e.status || 'ERR';
+    const gt = document.createElement('span'); gt.className = 'gtag'; gt.textContent = e.gate ? e.gate.name : 'all';
+    const lab = document.createElement('b'); lab.textContent = e.label;
+    const t = document.createElement('span'); t.className = 't'; t.textContent = e.ms + ' ms · ' + new Date().toLocaleTimeString();
+    s.append(badge, gt, lab, t);
+    const pre = document.createElement('pre');
+    let resp = e.text; try { resp = JSON.stringify(JSON.parse(e.text), null, 2); } catch (_) {}
+    if (e.err) resp += '\n(network/CORS error — check the URL, and that the host allows this page’s origin)';
+    pre.textContent = e.method + ' ' + e.url + '\n\n// request\n' + (e.body === undefined ? '(no body)' : JSON.stringify(e.body, null, 2)) + '\n\n// response\n' + (resp || '(empty body)');
+    const tools = document.createElement('div'); tools.className = 'tools';
+    const cp = document.createElement('button'); cp.textContent = 'Copy cURL';
+    cp.onclick = () => navigator.clipboard && navigator.clipboard.writeText(curl(e));
+    const cj = document.createElement('button'); cj.textContent = 'Copy request JSON';
+    cj.onclick = () => navigator.clipboard && navigator.clipboard.writeText(JSON.stringify(e.body, null, 2));
+    tools.append(cp, cj);
+    d.append(s, tools, pre);
+    $('log').prepend(d);
+    while ($('log').children.length > MAX_LOG) $('log').lastElementChild.remove();
+    applyFilter();
+  }
+  function applyFilter() {
+    const f = $('logFilter').value;
+    $('log').querySelectorAll('.entry').forEach(el => el.classList.toggle('hide', !!f && el.dataset.gate !== f));
   }
 
-  async function scan() {
-    const bad = needConfig(true); if (bad) return setStatus(bad, 'err');
-    const code = $('scanValue').value;
-    if (!code.trim()) return setStatus('Enter a shopper code', 'err');
-    save();
-    const channel = $('channel').value;
-    const now = new Date().toISOString();
-    const body = envelope({
-      requestId: uuid(),
-      storeId: $('storeId').value.trim(),
-      scanEvent: {
-        id: uuid(), timestamp: now, location: 'ENTRY', channel,
-        value: channel === 'RADIO' ? code : b64(code)
-      }
+  /* ---------- per-gate ui ---------- */
+  const setStatus = (g, msg, kind) => { g.r.status.textContent = msg; g.r.status.className = 'status' + (kind ? ' '+kind : ''); };
+  function setGate(g, state, text) {
+    const el = g.r.gate; el.className = 'gate'; void el.offsetWidth; // restart the walk animation
+    el.className = 'gate ' + (state || ''); g.r.lane.textContent = text;
+  }
+  const setStep = (g, n) => [1,2,3].forEach(i => g.r['st'+i].className = 'step' + (i<n ? ' done' : i===n ? ' on' : ''));
+  function renderTrip(g) {
+    g.r.trip.textContent = g.trip ? 'trip ' + g.trip.id.slice(0,8) : '';
+    g.r.shopper.innerHTML = g.shopper ? 'Shopper: <b></b>' : '';
+    if (g.shopper) g.r.shopper.querySelector('b').textContent = g.shopper.id + ' (' + g.shopper.type + ')';
+    else if (g.entered) g.r.shopper.textContent = 'Anonymous shopper \u00b7 no identity attached (scan a QR to add one)';
+  }
+  function renderRecent() {
+    gates.forEach(g => {
+      g.r.recent.innerHTML = '';
+      recent.slice(0, 8).forEach(r => {
+        const b = document.createElement('button'); b.textContent = r.id;
+        b.onclick = () => { g.r.itemId.value = r.id; g.r.itemType.value = r.type; };
+        g.r.recent.append(b);
+      });
     });
-    setStatus('Scanning…');
-    const r = await call('Identify customer (entry scan)', '/external/orders/customers/identify', body);
+  }
+  function renderCount() {
+    const live = gates.filter(g => g.cart.length).length;
+    $('gateCount').textContent = gates.length + (gates.length === 1 ? ' gate' : ' gates') + ' · ' + live + ' with items';
+    gates.forEach(g => g.r.remove.disabled = gates.length < 2);
+    $('btnAddGate').disabled = gates.length >= MAX_GATES;
+  }
+
+  /* live cart display: RC's priced cart when mirrored, the local basket otherwise */
+  function rowsOf(g) {
+    const rows = [], used = new Set();
+    const lines = g.rc.data && Array.isArray(g.rc.data.items) ? g.rc.data.items : null;
+    if (lines) lines.forEach(l => {
+      const e = g.cart.find(x => x.lineID && String(x.lineID) === String(l.cartItemID));
+      if (e) used.add(e);
+      rows.push({ line: l, entry: e });
+    });
+    g.cart.forEach(e => { if (!used.has(e)) rows.push({ entry: e, pending: !!g.rc.data || mirrorOn() }); });
+    return rows;
+  }
+  function el(tag, cls, text) { const x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; }
+  function renderCart(g) {
+    const box = g.r.lines; box.innerHTML = '';
+    const rows = rowsOf(g);
+    if (!rows.length) box.append(el('div', 'disp-empty', 'Cart is empty — take an item off the shelf'));
+    rows.forEach(({ line, entry, pending }) => {
+      const qty = line && line.quantity != null ? line.quantity : (entry ? entry.qty : '');
+      const ln = el('div', 'ln' + (pending ? ' pending' : ''));
+      ln.append(el('div', 'nm', (line && (line.name || line.itemID)) || (entry && entry.id) || '?'));
+      const amt = el('div', 'amt');
+      if (line && line.amount != null) amt.textContent = money(line.amount); else amt.textContent = pending ? 'pending' : '—';
+      ln.append(amt);
+      const subTxt = entry ? entry.type + ' ' + entry.id : 'item ' + (line && line.itemID);
+      const unit = line && line.unitPrice != null ? ' · ' + qty + ' × ' + money(line.unitPrice) : '';
+      ln.append(el('div', 'sub', subTxt + unit));
+      const ctl = el('div', 'ctl');
+      if (entry) {
+        const minus = el('button', '', '−'); minus.title = 'Return one'; minus.onclick = () => setQty(g, entry, entry.qty - 1);
+        const q = el('span', 'q', String(entry.qty));
+        const plus = el('button', '', '+'); plus.title = 'Take one more'; plus.onclick = () => setQty(g, entry, entry.qty + 1);
+        const del = el('button', '', '✕'); del.title = 'Return all'; del.onclick = () => removeEntry(g, entry);
+        minus.disabled = entry.qty <= 0;
+        ctl.append(minus, q, plus, del);
+      } else ctl.append(el('span', 'q', '×' + qty));
+      ln.append(ctl);
+      box.append(ln);
+    });
+
+    const p = g.rc.data && g.rc.data.payment;
+    g.r.totals.hidden = !p;
+    if (p) {
+      g.r.totals.innerHTML = '';
+      const add = (k, v, c) => { const d = el('div', c); d.append(el('span', '', k), el('span', '', money(v))); g.r.totals.append(d); };
+      add('Subtotal', p.subTotal);
+      if (Number(p.savings) > 0) add('Savings', -Math.abs(p.savings));
+      if (Number(p.fees) > 0) add('Fees', p.fees);
+      add('Tax', p.tax);
+      add('Total', p.dueAmount != null ? p.dueAmount : p.amount, 'tot');
+    }
+
+    g.r.warns.innerHTML = '';
+    const warns = [];
+    g.cart.forEach(e => { if (e.dropped) warns.push('RC added no line for ' + e.id + ' — unknown item or UPC?'); });
+    ((g.rc.data && g.rc.data.errors) || []).forEach(x => x && x.message && warns.push(x.message));
+    if (g.rc.err) warns.push(g.rc.err);
+    [...new Set(warns)].forEach(w => g.r.warns.append(el('div', 'disp-w', '⚠ ' + w)));
+
+    const s = g.r.sync, st = g.r.syncText;
+    if (!mirrorOn()) { s.className = 'sync'; st.textContent = $('mirror').checked ? 'local only · set URL + token' : 'local only'; }
+    else if (g.rc.err) { s.className = 'sync bad'; st.textContent = 'sync error'; }
+    else if (g.rc.pending > 0) { s.className = 'sync busy'; st.textContent = 'syncing…'; }
+    else if (g.rc.id) { s.className = 'sync live'; st.textContent = 'RC cart ' + g.rc.id + (g.rc.ms != null ? ' · ' + g.rc.ms + ' ms' : ''); }
+    else { s.className = 'sync'; st.textContent = 'no cart yet'; }
+    renderCount();
+  }
+
+  /* ---------- RC cart mirroring ----------
+     One session per trip. Its ops run strictly in order, so quick clicks never race, and gates are independent. */
+  const newRc = () => ({ id:null, data:null, ms:null, err:null, pending:0, q:Promise.resolve() });
+  function enqueue(g, fn, { silent = false } = {}) {
+    if (!mirrorOn()) return Promise.resolve();
+    const s = g.rc;
+    if (!silent) { s.pending++; if (g.rc === s) renderCart(g); }
+    s.q = s.q.then(() => fn(s)).catch(e => { s.err = e.message || String(e); })
+      .finally(() => { if (!silent) s.pending--; if (g.rc === s) renderCart(g); });
+    return s.q;
+  }
+  function errMsg(r) {
+    const j = r.json || {};
+    return j.message || j.error_description || j.error || (j.errors && j.errors[0] && j.errors[0].message) || ('HTTP ' + r.status);
+  }
+  async function cartCall(g, label, method, suffix, body, quiet) {
+    const ent = $('entStore').value.trim();
+    const headers = ent ? { Entitlement: btoa('LocationType=STORE,LocationID=' + ent) } : {};
+    const r = await http(g, label, method, cartBase() + suffix, { body, headers, quiet });
+    if (r.err) throw new Error('Cart API unreachable (network or CORS)');
+    return r;
+  }
+  async function ensureRc(g, s) {
+    if (s.id) return;
+    const r = await cartCall(g, 'Cart · open', 'POST', '/', {
+      cartName: 'JWO ' + g.name + ' ' + g.trip.id.slice(0, 8),
+      metadata: { externalDeviceID: deviceOf(g), externalOrderID: g.trip.id }, source: 'JWO-SIM' });
+    if (!r.ok) throw new Error(errMsg(r));
+    const j = r.json || {}; const id = j.cartID != null ? j.cartID : j.id != null ? j.id : j.data && j.data.cartID;
+    if (id == null) throw new Error('Cart created but no cartID in the response');
+    s.id = String(id);
+  }
+  async function refreshRc(g, s, quiet) {
+    if (!s.id) return;
+    const r = await cartCall(g, 'Cart · read', 'GET', '/' + s.id + '?expand=payment', undefined, quiet);
+    if (r.status === 404) { s.id = null; s.data = null; throw new Error('RC cart no longer exists'); }
+    if (!r.ok) throw new Error(errMsg(r));
+    s.data = r.json; s.ms = r.ms; s.err = null;
+    if (g.rc === s) mapLines(g);
+  }
+  function mapLines(g) {
+    const lines = (g.rc.data && g.rc.data.items) || [];
+    const claimed = new Set(g.cart.map(e => e.lineID).filter(Boolean).map(String));
+    g.cart.forEach(e => {
+      if (e.lineID && lines.some(l => String(l.cartItemID) === String(e.lineID))) return;
+      e.lineID = null;
+      const l = lines.find(l => !claimed.has(String(l.cartItemID)) && (String(l.itemID) === e.id || String(l.upc) === e.id));
+      if (l) { e.lineID = String(l.cartItemID); claimed.add(e.lineID); e.dropped = false; }
+    });
+  }
+  function syncAdd(g, e) {
+    enqueue(g, async s => {
+      if (!g.cart.includes(e)) return;                       // returned before it was sent
+      await ensureRc(g, s);
+      const field = e.type === 'SCANCODE' ? 'upc' : 'itemID';
+      const r = await cartCall(g, 'Cart · add ' + e.id, 'PATCH', '/' + s.id + '/items', [{ [field]: e.id, quantity: e.qty }]);
+      if (!r.ok) throw new Error(errMsg(r));
+      await refreshRc(g, s);
+      // The platform answers 200 for a code it cannot place and simply adds no line.
+      if (!e.lineID && g.cart.includes(e)) e.dropped = true;
+    });
+  }
+  function syncQty(g, e) {
+    enqueue(g, async s => {
+      if (!g.cart.includes(e) || !e.lineID) return;
+      const line = ((s.data && s.data.items) || []).find(l => String(l.cartItemID) === String(e.lineID));
+      const r = await cartCall(g, 'Cart · qty ' + e.id + ' → ' + e.qty, 'PATCH', '/' + s.id + '/items',
+        [{ cartItemID: e.lineID, itemID: line ? line.itemID : e.id, quantity: e.qty }]);
+      if (!r.ok) throw new Error(errMsg(r));
+      await refreshRc(g, s);
+    });
+  }
+  function syncDel(g, e) {
+    enqueue(g, async s => {
+      if (!s.id) return;
+      await refreshRc(g, s, true);
+      const lines = (s.data && s.data.items) || [];
+      const line = lines.find(l => String(l.cartItemID) === String(e.lineID)) ||
+        lines.find(l => !g.cart.some(x => String(x.lineID) === String(l.cartItemID)) && (String(l.itemID) === e.id || String(l.upc) === e.id));
+      if (!line) return;
+      const r = await cartCall(g, 'Cart · return ' + e.id, 'DELETE', '/' + s.id + '/items/' + line.cartItemID);
+      if (!r.ok) throw new Error(errMsg(r));
+      await refreshRc(g, s);
+    });
+  }
+  /** Close the RC cart of the session being replaced (trip ended, abandoned or gate removed). */
+  function closeRc(g, s) {
+    if (!mirrorOn()) return;
+    s.q = s.q.then(async () => {
+      if (!s.id) return;
+      try {
+        await cartCall(g, 'Cart · reset', 'DELETE', '/' + s.id + '/reset');
+        await cartCall(g, 'Cart · abandon', 'PUT', '/' + s.id, { cartID: s.id, status: 'Abandoned' });
+      } catch (_) { /* already in the request log */ }
+      s.id = null;
+    });
+  }
+
+  /* ---------- gate actions ---------- */
+  function newTrip(g) {
+    if (g.rc) closeRc(g, g.rc);
+    g.rc = newRc();
+    g.trip = { id: uuid(), start: null }; g.cart = []; g.authEvents = []; g.shopper = null; g.entered = false; g.sending = false;
+    renderCart(g); renderTrip(g); setStep(g, 1); setGate(g, '', 'ENTER WITH APP');
+    setStatus(g, 'IDLE · scan a shopper code to enter');
+  }
+
+  const SCAN_AT = { ENTRY:'entry', MANUAL_IN_STORE:'in-store', EXIT:'exit' };
+  const ENTER_FIRST = 'Enter the store first \u2014 scan a QR or walk in without scanning';
+  function enterStore(g, now) { g.entered = true; if (!g.trip.start) g.trip.start = now; }
+
+  /** Identity is optional: a scan that RC accepts attaches a shopper; one it rejects leaves the trip as it was. */
+  async function scan(g) {
+    const bad = needConfig(true); if (bad) return setStatus(g, bad, 'err');
+    const code = g.r.scan.value;
+    if (!code.trim()) return setStatus(g, 'Enter a shopper code, or walk in without scanning', 'err');
+    save();
+    const at = g.r.scanAt.value, channel = $('channel').value, now = new Date().toISOString();
+    const body = envelope({
+      requestId: uuid(), storeId: $('storeId').value.trim(),
+      scanEvent: { id: uuid(), timestamp: now, location: at, channel, value: channel === 'RADIO' ? code : b64(code) }
+    });
+    setStatus(g, 'Scanning\u2026');
+    const r = await call(g, 'Identify customer (' + SCAN_AT[at] + ' scan)', '/external/orders/customers/identify', body);
     if (r.ok && r.json && r.json.action === 'ACCEPT') {
-      trip.shopper = { id: r.json.id, type: r.json.type };
-      trip.start = now;
-      trip.authEvents = [{ id: uuid(), timestamp: now, location: 'ENTRY', payloadType: 'SCAN_CODE', scanResult: { id: r.json.id, type: r.json.type } }];
-      renderTrip(); setStep(2); setGate('open', 'WELCOME · GATE OPEN');
-      setStatus('ACCEPTED · shopper ' + r.json.id, 'ok');
+      g.shopper = { id: r.json.id, type: r.json.type };
+      const first = !g.entered; enterStore(g, now);
+      g.authEvents.push({ id: uuid(), timestamp: now, location: at, payloadType: 'SCAN_CODE', scanResult: { id: r.json.id, type: r.json.type } });
+      renderTrip(g);
+      if (first || at === 'ENTRY') { setStep(g, 2); setGate(g, 'open', 'WELCOME \u00b7 GATE OPEN'); }
+      setStatus(g, 'ACCEPTED \u00b7 shopper ' + r.json.id + (at === 'ENTRY' ? '' : ' (' + SCAN_AT[at] + ' scan)'), 'ok');
     } else if (r.ok && r.json && r.json.action === 'REJECT') {
-      trip.shopper = null; setGate('denied', 'ENTRY DENIED'); setStatus('REJECTED · shopper code not recognised', 'err');
+      if (!g.entered) setGate(g, 'denied', 'ENTRY DENIED');
+      setStatus(g, 'REJECTED \u00b7 shopper code not recognised' + (g.entered ? ' \u00b7 trip unchanged' : ' \u00b7 you can still walk in without scanning'), 'err');
     } else {
-      setGate('denied', 'ERROR'); setStatus('Identify failed (HTTP ' + (r.status || 'network') + ') — see request log', 'err');
+      if (!g.entered) setGate(g, 'denied', 'ERROR');
+      setStatus(g, 'Identify failed (HTTP ' + (r.status || 'network') + ') \u2014 see request log', 'err');
     }
   }
 
-  function addItem() {
-    const id = $('itemId').value.trim(); const qty = Number($('itemQty').value);
-    if (!id) return setStatus('Enter an item ID or UPC', 'err');
-    if (isNaN(qty) || qty < 0) return setStatus('Quantity cannot be negative', 'err');
-    const type = $('itemType').value;
-    const ex = trip.cart.find(c => c.id === id && c.type === type);
-    if (ex) ex.qty += qty; else trip.cart.push({ id, type, qty });
-    if (!recent.some(r => r.id === id)) recent.unshift({ id, type });
-    renderCart(); renderRecent(); $('itemId').value = '';
-    if (trip.shopper) setStep(2);
+  /** Enter without identifying. Sends nothing to RC; the purchase will simply carry no shopper identity. */
+  function walkInAnonymous(g) {
+    if (g.entered) return setStatus(g, 'Already inside \u2014 keep shopping, or scan a QR to attach an identity');
+    const now = new Date().toISOString(); enterStore(g, now);
+    g.authEvents.push({ id: uuid(), timestamp: now, location: 'ENTRY', payloadType: 'FINANCIAL' });
+    renderTrip(g); setStep(g, 2); setGate(g, 'open', 'WELCOME \u00b7 GATE OPEN');
+    setStatus(g, 'ENTERED \u00b7 no QR scanned \u2014 shopper is anonymous', 'ok');
   }
 
-  function purchaseBody() {
+  function addItem(g) {
+    const id = g.r.itemId.value.trim(), qty = Number(g.r.itemQty.value);
+    if (!g.entered) return setStatus(g, ENTER_FIRST, 'err');
+    if (!id) return setStatus(g, 'Enter an item ID or UPC', 'err');
+    if (isNaN(qty) || qty < 0) return setStatus(g, 'Quantity cannot be negative', 'err');
+    const type = g.r.itemType.value;
+    const ex = g.cart.find(c => c.id === id && c.type === type);
+    if (ex) { ex.qty += qty; syncQty(g, ex); }
+    else { const e = { id, type, qty, lineID: null, dropped: false }; g.cart.push(e); syncAdd(g, e); }
+    if (!recent.some(r => r.id === id)) { recent.unshift({ id, type }); renderRecent(); }
+    g.r.itemId.value = '';
+    renderCart(g);
+    if (g.shopper) setStep(g, 2);
+  }
+  function setQty(g, e, n) {
+    if (n < 0 || !g.cart.includes(e)) return;
+    e.qty = n; renderCart(g); syncQty(g, e);
+  }
+  function removeEntry(g, e) {
+    const i = g.cart.indexOf(e); if (i < 0) return;
+    g.cart.splice(i, 1); renderCart(g); syncDel(g, e);
+  }
+
+  function purchaseBody(g) {
     const end = new Date().toISOString();
-    const events = trip.authEvents.slice();
-    events.push({ id: uuid(), timestamp: end, location: 'EXIT', payloadType: 'SCAN_CODE',
-                  scanResult: trip.shopper ? { id: trip.shopper.id, type: trip.shopper.type } : undefined });
+    const events = g.authEvents.slice();
+    if (!events.some(e => e.location === 'EXIT')) {            // an explicit exit scan already counts
+      events.push(g.shopper
+        ? { id: uuid(), timestamp: end, location: 'EXIT', payloadType: 'SCAN_CODE', scanResult: { id: g.shopper.id, type: g.shopper.type } }
+        : { id: uuid(), timestamp: end, location: 'EXIT', payloadType: 'FINANCIAL' });
+    }
     const body = {
-      requestId: uuid(),
-      idempotentShoppingTripId: trip.id,
-      storeId: $('storeId').value.trim(),
-      shoppingTrip: { startTime: trip.start || end, endTime: end, authEvents: events },
-      cartItems: trip.cart.map((c, i) => ({
-        id: c.id,
-        type: c.type,
-        quantity: { value: String(c.qty), unit: 'UNIT' },
+      requestId: uuid(), idempotentShoppingTripId: g.trip.id, storeId: $('storeId').value.trim(),
+      shoppingTrip: { startTime: g.trip.start || end, endTime: end, authEvents: events },
+      cartItems: g.cart.map((c, i) => ({
+        id: c.id, type: c.type, quantity: { value: String(c.qty), unit: 'UNIT' },
         externalIdentifiers: c.type === 'SCANCODE' ? [{ id: c.id, type: 'UPC' }] : [],
-        lineItemId: trip.id.slice(0,8) + '-' + (i+1)
+        lineItemId: g.trip.id.slice(0,8) + '-' + (i+1)
       })),
-      shopperIdentity: trip.shopper ? { id: trip.shopper.id } : undefined,
-      shopperDeviceId: $('deviceId').value.trim()
+      shopperIdentity: g.shopper ? { id: g.shopper.id } : undefined,
+      shopperDeviceId: deviceOf(g)
     };
     if ($('paymentSource').value.trim()) body.paymentSource = { id: $('paymentSource').value.trim() };
     return body;
   }
-
-  async function send(body, label) {
-    setStatus('Sending purchase…');
-    const r = await call(label, '/external/orders/sync', envelope(body));
+  async function send(g, body, label) {
+    setStatus(g, 'Sending purchase…');
+    const r = await call(g, label, '/external/orders/sync', envelope(body));
     if (r.ok) {
-      trip.lastPurchase = body; $('btnResend').disabled = false;
-      setStep(3); setGate('open', 'THANKS · GOODBYE');
-      setStatus('CREATED · purchaseId ' + (r.json && r.json.purchaseId ? r.json.purchaseId : '(none returned)'), 'ok');
+      g.lastPurchase = body; g.r.btnResend.disabled = false;
+      setStep(g, 3); setGate(g, 'open', 'THANKS · GOODBYE');
+      setStatus(g, 'CREATED · purchaseId ' + (r.json && r.json.purchaseId ? r.json.purchaseId : '(none returned)') + (g.shopper ? '' : ' \u00b7 anonymous'), 'ok');
     } else {
-      setGate('denied', 'ERROR'); setStatus('Purchase failed (HTTP ' + (r.status || 'network') + ') — see request log', 'err');
+      setGate(g, 'denied', 'ERROR'); setStatus(g, 'Purchase failed (HTTP ' + (r.status || 'network') + ') — see request log', 'err');
     }
   }
-
-  async function walkOut() {
-    const bad = needConfig(true); if (bad) return setStatus(bad, 'err');
-    if (!trip.cart.length) return setStatus('Cart is empty — take at least one item', 'err');
-    save();
-    await send(purchaseBody(), 'Create purchase (exit)');
+  async function walkOut(g) {
+    const bad = needConfig(true); if (bad) return setStatus(g, bad, 'err');
+    if (!g.entered) return setStatus(g, ENTER_FIRST, 'err');
+    if (!g.cart.length) return setStatus(g, 'Cart is empty — take at least one item', 'err');
+    if (g.sending) return;
+    save(); g.sending = true;
+    try { await send(g, purchaseBody(g), 'Create purchase (exit)'); } finally { g.sending = false; }
   }
-  async function resend() {
-    if (!trip.lastPurchase) return;
-    const b = JSON.parse(JSON.stringify(trip.lastPurchase)); b.requestId = uuid();
-    await send(b, 'Create purchase (resend, same trip ID)');
+  async function resend(g) {
+    if (!g.lastPurchase || g.sending) return;
+    const b = JSON.parse(JSON.stringify(g.lastPurchase)); b.requestId = uuid();
+    g.sending = true;
+    try { await send(g, b, 'Create purchase (resend, same trip ID)'); } finally { g.sending = false; }
+  }
+  function resetGate(g, msg) {
+    g.lastPurchase = null; g.r.btnResend.disabled = true; newTrip(g);
+    if (msg) setStatus(g, msg);
+  }
+
+  /* ---------- gates ---------- */
+  function createGate() {
+    if (gates.length >= MAX_GATES) return;
+    const n = ++seq;
+    const g = { n, name: 'Gate ' + n, trip: null, cart: [], authEvents: [], shopper: null, lastPurchase: null, sending: false, entered: false, rc: null };
+    g.el = $('gateTpl').content.firstElementChild.cloneNode(true);
+    g.r = {}; g.el.querySelectorAll('[data-r]').forEach(x => g.r[x.dataset.r] = x);
+    g.r.name.textContent = g.name;
+    g.r.btnScan.onclick = () => scan(g);
+    g.r.btnAnon.onclick = () => walkInAnonymous(g);
+    g.r.btnAdd.onclick = () => addItem(g);
+    g.r.btnExit.onclick = () => walkOut(g);
+    g.r.btnResend.onclick = () => resend(g);
+    g.r.btnNew.onclick = () => resetGate(g);
+    g.r.btnAbandon.onclick = () => resetGate(g, 'Trip abandoned · nothing was sent');
+    g.r.itemId.addEventListener('keydown', e => { if (e.key === 'Enter') addItem(g); });
+    g.r.scan.addEventListener('keydown', e => { if (e.key === 'Enter') scan(g); });
+    g.r.remove.onclick = () => removeGate(g);
+    gates.push(g); $('gates').append(g.el);
+    const o = document.createElement('option'); o.value = n; o.textContent = g.name; $('logFilter').append(o);
+    newTrip(g); renderRecent(); renderCount();
+    return g;
+  }
+  function removeGate(g) {
+    if (gates.length < 2) return;
+    if (g.rc) closeRc(g, g.rc);
+    g.el.remove(); gates.splice(gates.indexOf(g), 1);
+    const o = [...$('logFilter').options].find(x => x.value === String(g.n)); if (o) o.remove();
+    if ($('logFilter').value === String(g.n)) $('logFilter').value = '';
+    applyFilter(); renderCount();
   }
 
   /* ---------- wiring ---------- */
-  $('btnScan').onclick = scan;
-  $('btnAdd').onclick = addItem;
-  $('btnExit').onclick = walkOut;
-  $('btnResend').onclick = resend;
-  $('btnNew').onclick = () => { $('btnResend').disabled = true; trip.lastPurchase = null; newTrip(); };
-  $('btnAbandon').onclick = () => { $('btnResend').disabled = true; trip.lastPurchase = null; newTrip(); setStatus('Trip abandoned · nothing was sent'); };
+  $('btnAddGate').onclick = () => { const g = createGate(); if (g) g.el.scrollIntoView({ behavior:'smooth', block:'nearest' }); };
+  $('btnScanAll').onclick = () => Promise.all(gates.filter(g => g.r.scan.value.trim()).map(scan));
+  $('btnExitAll').onclick = () => Promise.all(gates.filter(g => g.cart.length).map(walkOut));
   $('btnClearLog').onclick = () => { logCount = 0; $('log').innerHTML = '<div class="empty">No requests yet</div>'; };
+  $('logFilter').onchange = applyFilter;
   $('btnReset').onclick = () => { try { localStorage.removeItem(LS); sessionStorage.removeItem(LS+':token'); } catch (_) {} location.reload(); };
-  $('itemId').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
-  $('scanValue').addEventListener('keydown', e => { if (e.key === 'Enter') scan(); });
-  SAVED.concat(['token','rememberToken']).forEach(k => $(k).addEventListener('change', save));
-
+  SAVED.concat(['token','rememberToken','mirror']).forEach(k => $(k).addEventListener('change', () => { save(); gates.forEach(renderCart); }));
+  // Turning the mirror on mid-trip: send what is already in each basket.
+  $('mirror').addEventListener('change', () => { if (mirrorOn()) gates.forEach(g => g.cart.forEach(e => { if (!e.lineID && !e.dropped) syncAdd(g, e); })); });
   $('platformUrl').addEventListener('input', updateHost);
-  load(); updateHost(); renderCart(); renderRecent(); newTrip();
+
+  // Realtime: re-read each open RC cart so server-side pricing changes (promotions, tax) show up without a click.
+  setInterval(() => {
+    if (document.hidden || !mirrorOn()) return;
+    gates.forEach(g => { if (g.rc.id && g.rc.pending === 0) enqueue(g, s => refreshRc(g, s, true), { silent: true }); });
+  }, POLL_MS);
+
+  load(); updateHost(); createGate();
 })();
 
 </script>
