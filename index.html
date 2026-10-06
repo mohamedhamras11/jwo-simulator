@@ -6,102 +6,191 @@
 <title>JWO Store Simulator</title>
 <style>
   :root {
-    --bg:#f4f5f7; --panel:#fff; --ink:#1b1f24; --muted:#6a737d; --line:#dfe3e8;
-    --accent:#0b7a4b; --accent-ink:#fff; --warn:#b45309; --bad:#c62828; --good:#0b7a4b; --code:#0f1720;
+    --bg:#eef2f1; --bg2:#e3ebe8; --panel:#ffffff; --ink:#14201c; --muted:#62736d; --line:#dbe4e0;
+    --field:#f6f9f8; --accent:#0e9f6e; --accent-2:#0a7d57; --accent-ink:#ffffff; --accent-soft:#e2f5ee;
+    --bad:#d23b3b; --bad-soft:#fdeaea; --warn:#b7791f; --good:#0e9f6e;
+    --code:#0d1512; --code-ink:#cfe6dc; --shadow:0 1px 2px rgba(16,40,30,.06),0 8px 24px rgba(16,40,30,.06);
+    --pillar:#f7f7f4; --pillar-edge:#cfd3cd; --floor1:#d5dcd8; --floor2:#c3ccc7;
+    --radius:14px;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#12151a; --panel:#1b2027; --ink:#e8ebef; --muted:#97a1ad; --line:#2d3540; --accent:#2fb479; --accent-ink:#06180f; --code:#0a0d11; --bad:#ef6a6a; --warn:#e0a24a; --good:#2fb479; }
+    :root {
+      --bg:#0c1210; --bg2:#101a16; --panel:#15201c; --ink:#e7f0ec; --muted:#8fa39b; --line:#25352f;
+      --field:#101a16; --accent:#2fbf8a; --accent-2:#25a577; --accent-ink:#04140d; --accent-soft:#12302510;
+      --bad:#ef6a6a; --bad-soft:#2b1717; --warn:#e0a24a; --good:#2fbf8a;
+      --code:#080d0b; --code-ink:#bfe0d2; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);
+      --pillar:#e9ebe6; --pillar-edge:#8a918b; --floor1:#1a2622; --floor2:#14201c;
+    }
   }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  header { display:flex; align-items:center; gap:12px; padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--line); }
-  header h1 { font-size:15px; margin:0; letter-spacing:.04em; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    margin:0; color:var(--ink); min-height:100vh;
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 500px at 50% -200px,var(--bg2),transparent),var(--bg);
+  }
+
+  /* ---------- header ---------- */
+  header { display:flex; align-items:center; gap:14px; padding:14px 24px; background:var(--panel); border-bottom:1px solid var(--line); box-shadow:var(--shadow); position:sticky; top:0; z-index:5; }
+  .logo { width:38px; height:38px; border-radius:11px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:grid; place-items:center; color:#fff; box-shadow:0 4px 12px rgba(14,159,110,.35); flex:none; }
+  .logo svg { width:22px; height:22px; }
+  header h1 { font-size:16px; line-height:1.2; margin:0; letter-spacing:.01em; }
   header .tag { color:var(--muted); font-size:12px; }
-  main { display:grid; grid-template-columns:minmax(300px,380px) 1fr minmax(320px,440px); gap:16px; padding:16px; align-items:start; }
-  @media (max-width:1100px){ main{ grid-template-columns:1fr; } }
-  section { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
-  section h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 10px; display:flex; justify-content:space-between; align-items:center; }
-  label { display:block; font-size:12px; color:var(--muted); margin:8px 0 3px; }
-  input, select, textarea { width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); font:inherit; }
-  textarea { font-family:ui-monospace,Menlo,monospace; font-size:12px; }
-  button { padding:7px 12px; border:1px solid var(--line); border-radius:6px; background:var(--panel); color:var(--ink); font:inherit; cursor:pointer; }
-  button:hover { border-color:var(--accent); }
-  button.primary { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600; }
+  .host-pill { margin-left:auto; display:flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid var(--line); border-radius:999px; background:var(--field); font-size:12px; color:var(--muted); max-width:46vw; }
+  .host-pill b { color:var(--ink); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .host-pill i { width:8px; height:8px; border-radius:50%; background:var(--muted); flex:none; }
+  .host-pill.set i { background:var(--good); box-shadow:0 0 0 3px rgba(14,159,110,.2); }
+
+  /* ---------- layout ---------- */
+  main { display:grid; grid-template-columns:minmax(290px,350px) minmax(420px,1fr) minmax(320px,430px); gap:20px; padding:22px 24px 40px; align-items:start; max-width:1700px; margin:0 auto; }
+  @media (max-width:1180px){ main{ grid-template-columns:1fr 1fr; } main > section:first-child{ grid-column:1/-1; } }
+  @media (max-width:760px){ main{ grid-template-columns:1fr; padding:14px 16px 32px; } header{ padding:12px 16px; } .host-pill{ display:none; } }
+
+  section { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
+  section h2 { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 14px; display:flex; justify-content:space-between; align-items:center; font-weight:700; }
+  h2 .ic { display:inline-flex; align-items:center; gap:8px; }
+  h2 .ic svg { width:15px; height:15px; color:var(--accent); }
+
+  label { display:block; font-size:12px; color:var(--muted); margin:12px 0 5px; font-weight:600; }
+  input, select { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--field); color:var(--ink); font:inherit; transition:border-color .15s, box-shadow .15s, background .15s; }
+  input:focus, select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(14,159,110,.18); background:var(--panel); }
+  input[type=checkbox] { width:auto; accent-color:var(--accent); }
+  ::placeholder { color:#93a39d; }
+  code { background:var(--field); border:1px solid var(--line); padding:0 5px; border-radius:5px; font-size:12px; }
+
+  button { padding:9px 14px; border:1px solid var(--line); border-radius:9px; background:var(--panel); color:var(--ink); font:inherit; font-weight:600; cursor:pointer; transition:transform .06s, border-color .15s, background .15s, box-shadow .15s; }
+  button:hover:not(:disabled) { border-color:var(--accent); background:var(--accent-soft); }
+  button:active:not(:disabled) { transform:translateY(1px); }
+  button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  button.primary { background:linear-gradient(180deg,var(--accent),var(--accent-2)); color:var(--accent-ink); border-color:var(--accent-2); box-shadow:0 4px 12px rgba(14,159,110,.28); }
+  button.primary:hover:not(:disabled) { filter:brightness(1.06); background:linear-gradient(180deg,var(--accent),var(--accent-2)); }
   button.danger { color:var(--bad); }
+  button.danger:hover:not(:disabled) { border-color:var(--bad); background:var(--bad-soft); }
+  button.ghost { padding:4px 10px; font-size:12px; font-weight:600; color:var(--muted); }
   button:disabled { opacity:.45; cursor:not-allowed; }
-  .row { display:flex; gap:8px; align-items:end; }
-  .row > * { flex:1; }
+
+  .row { display:flex; gap:10px; align-items:end; }
+  .row > * { flex:1; min-width:0; }
   .row > button { flex:0 0 auto; }
-  .stack > * + * { margin-top:10px; }
-
-  /* gate */
-  .gate { display:flex; align-items:center; justify-content:center; gap:0; margin:6px 0 12px; }
-  .pillar { width:46px; height:88px; background:#f1f1ee; border:1px solid #c9c9c4; border-radius:6px; position:relative; }
-  .pillar::after { content:"JUST WALK OUT"; position:absolute; inset:34px 2px auto; font-size:7px; font-weight:800; text-align:center; color:#222; }
-  .pillar .lamp { position:absolute; top:6px; left:50%; width:14px; height:14px; margin-left:-7px; border-radius:50%; background:#8a8f98; transition:background .2s, box-shadow .2s; }
-  .lane { width:130px; height:88px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--muted); border-bottom:3px solid var(--line); transition:all .2s; }
-  .gate.open .lamp { background:#20c26f; box-shadow:0 0 12px #20c26f; }
-  .gate.open .lane { color:var(--good); border-color:var(--good); }
-  .gate.denied .lamp { background:#e04444; box-shadow:0 0 12px #e04444; }
-  .gate.denied .lane { color:var(--bad); border-color:var(--bad); }
-
-  .steps { display:flex; gap:6px; margin-bottom:10px; font-size:12px; }
-  .step { flex:1; text-align:center; padding:5px 0; border-radius:6px; background:var(--bg); color:var(--muted); border:1px solid var(--line); }
-  .step.on { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
-  .step.done { color:var(--good); border-color:var(--good); }
-
-  .status { font-size:13px; padding:8px 10px; border-radius:6px; background:var(--bg); border:1px solid var(--line); }
-  .status.ok { color:var(--good); } .status.err { color:var(--bad); }
+  .stack > * + * { margin-top:12px; }
+  .hint { font-size:12px; color:var(--muted); margin-top:8px; }
   .kv { font-size:12px; color:var(--muted); word-break:break-all; }
   .kv b { color:var(--ink); font-weight:600; }
+  .divider { border:0; border-top:1px dashed var(--line); margin:18px 0 6px; }
 
-  table { width:100%; border-collapse:collapse; font-size:13px; }
-  th { text-align:left; font-size:11px; color:var(--muted); font-weight:600; padding:4px 6px; border-bottom:1px solid var(--line); }
-  td { padding:6px; border-bottom:1px solid var(--line); vertical-align:middle; }
-  td input { padding:4px 6px; width:70px; }
-  .empty { color:var(--muted); font-size:13px; padding:12px 0; text-align:center; }
+  /* ---------- stepper ---------- */
+  .steps { display:flex; align-items:center; margin:2px 0 16px; }
+  .step { flex:none; display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:var(--muted); }
+  .step .n { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--field); border:1px solid var(--line); font-size:12px; transition:all .25s; }
+  .step.on { color:var(--ink); }
+  .step.on .n { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); box-shadow:0 0 0 4px rgba(14,159,110,.18); }
+  .step.done { color:var(--good); }
+  .step.done .n { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .step.done .n::before { content:"\2713"; }
+  .step.done .n span { display:none; }
+  .bar { flex:1; height:2px; background:var(--line); margin:0 10px; border-radius:2px; min-width:14px; }
+  @media (max-width:520px){ .step .t { display:none; } }
+
+  /* ---------- store scene ---------- */
+  .scene { position:relative; border-radius:12px; overflow:hidden; margin:2px 0 14px; border:1px solid var(--line);
+           background:linear-gradient(180deg,var(--bg2) 0%,var(--field) 55%,var(--floor1) 55%,var(--floor2) 100%); }
+  .shelf { display:flex; gap:5px; padding:12px 14px 0; justify-content:center; opacity:.9; }
+  .shelf i { width:26px; height:34px; border-radius:4px 4px 2px 2px; background:var(--c); box-shadow:inset 0 -6px 0 rgba(0,0,0,.12); }
+  .banner { margin:10px auto 0; width:max-content; max-width:92%; display:flex; align-items:center; gap:10px; padding:7px 18px; background:linear-gradient(180deg,#14b57e,#0b8f64); color:#fff; border-radius:8px; font-weight:800; font-size:13px; letter-spacing:.06em; box-shadow:0 4px 14px rgba(14,159,110,.4); text-align:center; }
+  .banner svg { width:18px; height:18px; flex:none; }
+  .gate { position:relative; display:flex; align-items:flex-end; justify-content:center; height:150px; padding:0 8px 12px; }
+  .pillar { position:relative; width:58px; height:116px; background:linear-gradient(90deg,#fff,var(--pillar)); border:1px solid var(--pillar-edge); border-radius:9px 9px 5px 5px; box-shadow:0 8px 14px rgba(0,0,0,.18); flex:none; z-index:2; }
+  .pillar::after { content:"JUST\AWALK\AOUT"; white-space:pre; position:absolute; left:0; right:0; top:44px; text-align:center; font-size:9px; line-height:1.15; font-weight:900; letter-spacing:.06em; color:#1b2420; }
+  .pillar .lamp { position:absolute; top:9px; left:50%; width:16px; height:16px; margin-left:-8px; border-radius:50%; background:#8a948f; border:2px solid rgba(255,255,255,.7); transition:background .25s, box-shadow .25s; }
+  .pillar .slot { position:absolute; top:26px; left:12px; right:12px; height:8px; border-radius:4px; background:#2a332f; opacity:.85; }
+  .lane { position:relative; width:min(46%,230px); height:100%; display:flex; align-items:flex-end; justify-content:center; overflow:hidden; }
+  .lane .led { margin-bottom:6px; padding:4px 12px; border-radius:6px; background:#0b1210; color:#7a8a83; font:700 11px/1.3 ui-monospace,Menlo,Consolas,monospace; letter-spacing:.1em; text-align:center; transition:all .25s; border:1px solid #1d2a25; white-space:nowrap; position:relative; z-index:1; }
+  .lane::before { content:""; position:absolute; left:10%; right:10%; bottom:0; height:6px; border-radius:3px; background:var(--line); transition:background .25s; }
+  .walker { position:absolute; bottom:26px; left:-30px; width:26px; height:62px; opacity:0; }
+  .walker::before { content:""; position:absolute; top:0; left:5px; width:16px; height:16px; border-radius:50%; background:#31403a; }
+  .walker::after  { content:""; position:absolute; top:19px; left:2px; width:22px; height:40px; border-radius:11px 11px 5px 5px; background:linear-gradient(180deg,var(--accent),var(--accent-2)); }
+  .gate.open .pillar .lamp { background:#26d98c; box-shadow:0 0 16px 3px rgba(38,217,140,.7); }
+  .gate.open .lane .led { background:#0b2a1f; color:#46f0a8; border-color:#14573e; }
+  .gate.open .lane::before { background:var(--accent); }
+  .gate.open .walker { animation:walk 1.7s ease-in-out forwards; }
+  .gate.denied .pillar .lamp { background:#ff5757; box-shadow:0 0 16px 3px rgba(255,87,87,.7); animation:blink .5s 3; }
+  .gate.denied .lane .led { background:#2b1111; color:#ff8a8a; border-color:#6b2222; }
+  .gate.denied .lane::before { background:var(--bad); }
+  @keyframes walk { 0%{ left:-30px; opacity:0; } 12%{ opacity:1; } 88%{ opacity:1; } 100%{ left:calc(100% + 4px); opacity:0; } }
+  @keyframes blink { 50%{ opacity:.25; } }
+  @media (prefers-reduced-motion:reduce){ .gate.open .walker, .gate.denied .pillar .lamp { animation:none; } }
+
+  .status { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; padding:10px 14px; border-radius:10px; background:var(--field); border:1px solid var(--line); }
+  .status::before { content:""; width:9px; height:9px; border-radius:50%; background:var(--muted); flex:none; }
+  .status.ok { background:var(--accent-soft); border-color:rgba(14,159,110,.35); color:var(--accent-2); }
+  .status.ok::before { background:var(--good); box-shadow:0 0 0 3px rgba(14,159,110,.2); }
+  .status.err { background:var(--bad-soft); border-color:rgba(210,59,59,.35); color:var(--bad); }
+  .status.err::before { background:var(--bad); }
+  @media (prefers-color-scheme: dark){ .status.ok { background:#12302a; color:var(--accent); } }
+
+  /* ---------- cart ---------- */
   .chips { display:flex; gap:6px; flex-wrap:wrap; }
-  .chips button { font-size:12px; padding:4px 9px; }
+  .chips:empty { display:none; }
+  .chips button { font-size:12px; padding:3px 10px; border-radius:999px; font-weight:500; font-family:ui-monospace,Menlo,monospace; }
+  table { width:100%; border-collapse:separate; border-spacing:0 6px; font-size:13px; }
+  th { text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:700; padding:0 10px 2px; }
+  td { padding:8px 10px; background:var(--field); vertical-align:middle; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  td:first-child { border-left:1px solid var(--line); border-radius:9px 0 0 9px; font-family:ui-monospace,Menlo,monospace; font-weight:600; word-break:break-all; }
+  td:last-child { border-right:1px solid var(--line); border-radius:0 9px 9px 0; }
+  td:nth-child(2) { color:var(--muted); font-size:11.5px; font-weight:700; letter-spacing:.06em; }
+  td input { padding:5px 8px; width:72px; }
+  td button { padding:4px 10px; font-size:12px; }
+  .empty { color:var(--muted); font-size:13px; padding:22px 0; text-align:center; border:1px dashed var(--line); border-radius:10px; background:var(--field); }
 
-  .log { max-height:640px; overflow:auto; }
-  .entry { border:1px solid var(--line); border-radius:8px; margin-bottom:8px; overflow:hidden; }
-  .entry summary { cursor:pointer; padding:7px 10px; display:flex; gap:8px; align-items:center; font-size:12px; }
-  .badge { padding:1px 7px; border-radius:10px; font-weight:700; font-size:11px; color:#fff; background:var(--muted); }
+  /* ---------- log ---------- */
+  .log { max-height:calc(100vh - 150px); min-height:120px; overflow:auto; padding-right:2px; }
+  .entry { border:1px solid var(--line); border-radius:11px; margin-bottom:10px; overflow:hidden; background:var(--field); }
+  .entry summary { cursor:pointer; padding:9px 12px; display:flex; gap:9px; align-items:center; font-size:12.5px; list-style:none; }
+  .entry summary::-webkit-details-marker { display:none; }
+  .entry summary::before { content:"\25B8"; color:var(--muted); transition:transform .15s; }
+  .entry[open] summary::before { transform:rotate(90deg); }
+  .badge { padding:2px 8px; border-radius:999px; font-weight:800; font-size:11px; color:#fff; background:var(--muted); min-width:38px; text-align:center; }
   .badge.s2 { background:var(--good); } .badge.s4, .badge.s5, .badge.s0 { background:var(--bad); }
-  .entry pre { margin:0; padding:10px; background:var(--code); color:#d6e2ee; font-size:11.5px; overflow:auto; max-height:260px; }
-  .entry .tools { padding:6px 10px; display:flex; gap:6px; }
-  .entry .tools button { font-size:11px; padding:2px 8px; }
-  .t { color:var(--muted); margin-left:auto; }
-  .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+  .entry pre { margin:0; padding:12px 14px; background:var(--code); color:var(--code-ink); font:11.5px/1.55 ui-monospace,Menlo,Consolas,monospace; overflow:auto; max-height:280px; }
+  .entry .tools { padding:0 12px 9px; display:flex; gap:6px; }
+  .entry .tools button { font-size:11px; padding:2px 9px; font-weight:600; }
+  .t { color:var(--muted); margin-left:auto; font-size:11.5px; white-space:nowrap; }
+  .foot { text-align:center; color:var(--muted); font-size:12px; padding:0 16px 28px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>JWO &middot; STORE SIMULATOR</h1>
-  <span class="tag">Just Walk Out &rarr; RetailCloud integration service</span>
+  <div class="logo" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h12"/><path d="m12 6 6 6-6 6"/><path d="M20 4v16"/></svg>
+  </div>
+  <div>
+    <h1>JWO Store Simulator</h1>
+    <div class="tag">Just Walk Out &rarr; RetailCloud integration service</div>
+  </div>
+  <div class="host-pill" id="hostPill"><i></i><span>Platform</span><b id="hostText">not configured</b></div>
 </header>
 
 <main>
   <!-- LEFT: configuration -->
   <section class="stack">
-    <h2>Connection <button id="btnReset" title="Clear saved settings">Reset</button></h2>
+    <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Connection</span> <button class="ghost" id="btnReset" title="Clear saved settings">Reset</button></h2>
     <div>
       <label for="platformUrl">Platform URL</label>
       <input id="platformUrl" placeholder="https://your-platform-host" autocomplete="off">
-      <div class="hint">Calls <code>/external/orders/customers/identify</code> and <code>/external/orders/sync</code> on the integration service.</div>
+      <div class="hint">Calls <code>/external/orders/customers/identify</code> and <code>/external/orders/sync</code>.</div>
     </div>
     <div>
       <label for="domain">Merchant domain</label>
       <input id="domain" placeholder="e.g. mystore" autocomplete="off">
     </div>
     <div>
-      <label for="token">Bearer token <span style="float:right"><input type="checkbox" id="rememberToken" style="width:auto"> remember</span></label>
+      <label for="token">Bearer token <span style="float:right;font-weight:500"><input type="checkbox" id="rememberToken"> remember</span></label>
       <input id="token" type="password" placeholder="OAuth access token" autocomplete="off">
     </div>
     <div class="row">
       <div>
         <label for="storeId">JWO store ID</label>
-        <input id="storeId" placeholder="must match auth additionalAuthInfo">
+        <input id="storeId" placeholder="matches auth config">
       </div>
       <div>
         <label for="deviceId">Shopper device ID</label>
@@ -126,26 +215,38 @@
       <label for="paymentSource">Payment source ID <span style="font-weight:400">(optional)</span></label>
       <input id="paymentSource" placeholder="JWO payment source id">
     </div>
-    <div class="kv">Settings are saved in this browser only. The token is kept for this tab unless &ldquo;remember&rdquo; is ticked.</div>
+    <div class="kv">Settings are saved in this browser only. The token stays in this tab unless &ldquo;remember&rdquo; is ticked.</div>
   </section>
 
   <!-- MIDDLE: store flow -->
   <section>
-    <h2>Store <span class="kv" id="tripLabel"></span></h2>
-    <div class="steps">
-      <div class="step on" id="st1">1 &middot; Entry scan</div>
-      <div class="step" id="st2">2 &middot; Shop</div>
-      <div class="step" id="st3">3 &middot; Exit &amp; purchase</div>
+    <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg>Store</span> <span class="kv" id="tripLabel"></span></h2>
+
+    <div class="steps" aria-label="Progress">
+      <div class="step on" id="st1"><span class="n"><span>1</span></span><span class="t">Entry scan</span></div>
+      <div class="bar"></div>
+      <div class="step" id="st2"><span class="n"><span>2</span></span><span class="t">Shop</span></div>
+      <div class="bar"></div>
+      <div class="step" id="st3"><span class="n"><span>3</span></span><span class="t">Exit &amp; purchase</span></div>
     </div>
 
-    <div class="gate" id="gate">
-      <div class="pillar"><div class="lamp"></div></div>
-      <div class="lane" id="laneText">ENTER WITH APP</div>
-      <div class="pillar"><div class="lamp"></div></div>
+    <div class="scene">
+      <div class="shelf" aria-hidden="true">
+        <i style="--c:#f2b84b"></i><i style="--c:#58b6a0"></i><i style="--c:#e86f6f"></i><i style="--c:#6f8fe8"></i><i style="--c:#f2b84b"></i><i style="--c:#7bc47f"></i><i style="--c:#e86f6f"></i><i style="--c:#58b6a0"></i><i style="--c:#6f8fe8"></i><i style="--c:#f2b84b"></i>
+      </div>
+      <div class="banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
+        ENTER WITH APP
+      </div>
+      <div class="gate" id="gate">
+        <div class="pillar"><div class="lamp"></div><div class="slot"></div></div>
+        <div class="lane"><div class="walker"></div><div class="led" id="laneText">ENTER WITH APP</div></div>
+        <div class="pillar"><div class="lamp"></div><div class="slot"></div></div>
+      </div>
     </div>
 
     <div class="stack">
-      <div id="status" class="status">IDLE &middot; scan a shopper code to enter</div>
+      <div id="status" class="status" role="status">IDLE &middot; scan a shopper code to enter</div>
 
       <div class="row">
         <div>
@@ -156,18 +257,18 @@
       </div>
       <div class="kv" id="shopperInfo"></div>
 
-      <hr style="border:0;border-top:1px solid var(--line);width:100%">
+      <hr class="divider">
 
       <div class="row">
         <div>
           <label for="itemId">Item ID / UPC</label>
-          <input id="itemId" placeholder="sent exactly as typed, no lookup" autocomplete="off">
+          <input id="itemId" placeholder="sent exactly as typed" autocomplete="off">
         </div>
-        <div style="max-width:90px">
+        <div style="max-width:84px">
           <label for="itemQty">Qty</label>
           <input id="itemQty" type="number" min="0" step="1" value="1">
         </div>
-        <div style="max-width:120px">
+        <div style="max-width:128px">
           <label for="itemType">Type</label>
           <select id="itemType"><option>SKU</option><option>SCANCODE</option></select>
         </div>
@@ -180,29 +281,31 @@
           <thead><tr><th>Item</th><th>Type</th><th>Qty</th><th></th></tr></thead>
           <tbody id="cartBody"></tbody>
         </table>
-        <div class="empty" id="cartEmpty">Cart is empty</div>
+        <div class="empty" id="cartEmpty">Cart is empty &mdash; take an item off the shelf</div>
       </div>
 
       <div class="row">
         <button id="btnNew">New trip</button>
-        <button class="primary" id="btnExit">Walk out &rarr; send purchase</button>
+        <button class="primary" id="btnExit" style="flex:1">Walk out &rarr; send purchase</button>
       </div>
       <div class="row">
-        <button id="btnResend" disabled>Resend last purchase (same trip ID)</button>
+        <button id="btnResend" disabled style="flex:1">Resend last purchase (same trip ID)</button>
         <button id="btnAbandon" class="danger">Abandon</button>
       </div>
-      <div class="hint">Resend reuses the idempotent shopping trip ID, to check duplicate handling. Quantity may be 0, never negative.</div>
+      <div class="hint">Resend reuses the idempotent shopping trip ID to check duplicate handling. Quantity may be 0, never negative.</div>
     </div>
   </section>
 
   <!-- RIGHT: log -->
   <section>
-    <h2>Requests <button id="btnClearLog">Clear</button></h2>
+    <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Requests</span> <button class="ghost" id="btnClearLog">Clear</button></h2>
     <div class="log" id="log"><div class="empty">No requests yet</div></div>
   </section>
 </main>
+<div class="foot">Runs entirely in your browser &middot; requests go only to the Platform URL you enter</div>
 
 <script>
+
 (() => {
   const $ = id => document.getElementById(id);
   const SAVED = ['platformUrl','domain','storeId','deviceId','channel','currency','paymentSource'];
@@ -226,6 +329,7 @@
   function save() {
     const s = {};
     SAVED.forEach(k => s[k] = $(k).value);
+    updateHost();
     s.rememberToken = $('rememberToken').checked;
     if (s.rememberToken) s.token = $('token').value;
     try { localStorage.setItem(LS, JSON.stringify(s)); } catch (_) {}
@@ -234,7 +338,15 @@
 
   /* ---------- ui helpers ---------- */
   function setStatus(msg, kind) { const e = $('status'); e.textContent = msg; e.className = 'status' + (kind ? ' '+kind : ''); }
-  function setGate(state, text) { $('gate').className = 'gate ' + (state||''); $('laneText').textContent = text; }
+  function setGate(state, text) {
+    const g = $('gate'); g.className = 'gate'; void g.offsetWidth; // restart the walk animation
+    g.className = 'gate ' + (state||''); $('laneText').textContent = text;
+  }
+  function updateHost() {
+    const v = $('platformUrl').value.trim(); let h = '';
+    try { h = v ? new URL(v).host : ''; } catch (_) { h = v; }
+    $('hostText').textContent = h || 'not configured'; $('hostPill').className = 'host-pill' + (h ? ' set' : '');
+  }
   function setStep(n) {
     [1,2,3].forEach(i => $('st'+i).className = 'step' + (i<n ? ' done' : i===n ? ' on' : ''));
   }
@@ -440,8 +552,10 @@
   $('scanValue').addEventListener('keydown', e => { if (e.key === 'Enter') scan(); });
   SAVED.concat(['token','rememberToken']).forEach(k => $(k).addEventListener('change', save));
 
-  load(); renderCart(); renderRecent(); newTrip();
+  $('platformUrl').addEventListener('input', updateHost);
+  load(); updateHost(); renderCart(); renderRecent(); newTrip();
 })();
+
 </script>
 </body>
 </html>
